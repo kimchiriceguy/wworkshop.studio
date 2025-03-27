@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Workshop Studio</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles_AboutUs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
     <header>
@@ -17,19 +18,78 @@
         barbershop / school / consultancy / barbershop / school / consultancy / barbershop / school / consultancy /
       </div>
     </div>
-
-        <section class="logo-section">
-    <div class="video-banner">
+    <section class="logo-section">
+        <div class="video-banner">
         <video autoplay loop muted playsinline>
             <source src="sample.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
-    </div>
-    <div class="logo-container">
+        </div>
+        <div class="logo-container">
         <img src="logo2.png" alt="Workshop Studio Logo">
-    </div>
-</section>
+        </div>
+    </section>
     </header>
+
+    <!-- navbar -->
+     <!-- no longer added tagline -->
+    <header>
+        <div class="top-bar">
+          <div class="logo-container">
+            <img src="./assets/logo-1.png" alt="Barbershop Logo" class="logo" />
+          </div>
+          <div class="top-right">
+            <div class="booking-search">
+              <div class="dropdown">
+                <button class="book-btn">BOOK APPOINTMENT ▼</button>
+                <div class="dropdown-content">
+                  <a href="#" id="haircut">Haircut</a>
+                  <a href="#" id="shave">Shave</a>
+                  <a href="#" id="styling">Styling</a>
+                  <a href="#" id="coloring">Coloring</a>
+                </div>
+              </div>
+              <div class="search-container">
+                <input type="text" placeholder="Search..." />
+                <button class="search-btn"><i class="fas fa-search"></i></button>
+                <button class="close-btn"><i class="fas fa-times"></i></button>
+              </div>
+            </div>
+            <nav class="main-nav">
+              <ul>
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="AboutUs.html" class="active">ABOUT</a></li>
+                <li class="dropdown">
+                  <a href="#">CALENDAR ▼</a>
+                  <div class="dropdown-content">
+                    <a href="#">This Week</a>
+                    <a href="#">This Month</a>
+                    <a href="#">Special Events</a>
+                  </div>
+                </li>
+                <li class="dropdown">
+                  <a href="#">SERVICES ▼</a>
+                  <div class="dropdown-content">
+                    <a href="#">Haircuts</a>
+                    <a href="#">Beard Trim</a>
+                    <a href="#">Hot Towel Shave</a>
+                    <a href="#">Hair Styling</a>
+                  </div>
+                </li>
+                <li class="dropdown">
+                  <a href="#">SHOP ▼</a>
+                  <div class="dropdown-content">
+                    <a href="#">Hair Products</a>
+                    <a href="#">Beard Care</a>
+                    <a href="#">Accessories</a>
+                  </div>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+    </header>
+      
     <section class="content">
         <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."</p>
         <div class="gallery">
@@ -39,7 +99,7 @@
         </div>
         <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
         <p class="highlight"><strong>Lorem ipsum dolor sit amet</strong></p>
-        <div class="image-box"></div>
+        <!-- <div class="image-box"></div> -->
     </section>
     <script src="script.js"></script>
 </body>
