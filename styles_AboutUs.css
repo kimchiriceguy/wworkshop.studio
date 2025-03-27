@@ -102,6 +102,8 @@ body {
 
 /* Shrinking the Logo */
 .logo-container img {
+    top: 10px;
+
     max-width: 200px; /* Adjust size */
     height: auto;
     display: block;
@@ -373,29 +375,31 @@ bc prev header is only used as container for the vid part */
     height: 300px; /* Adjust height as needed */
     background-color: gray; /* Placeholder for images */
 }
-.marquee {
-    width: 100%;
-    overflow: hidden;
-    white-space: nowrap;
-    background: black;
-    color: white;
-    padding: 10px 0;
-    font-size: 18px;
-    font-weight: bold;
-    position: relative;
+  .wrapper{
+  padding: 0px;
+  background-color: black;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.marquee-text{
+  overflow: clip;
+}
+
+.marquee-text-track{
+  display: flex;
+  gap: 1px;
+  width: max-content;
+  color: white;
+  animation: marqueemovetext 40s linear infinite;
+}
+
+.marquee-text h1{
+  padding: 0.3rem 2.5rem;
+}
+
+@keyframes marqueemovetext {
+  to{
+    transform: translateX(-50%);
   }
-  
-  .marquee-content {
-    display: inline-block;
-    padding-left: 100%;
-    animation: marquee 10s linear infinite;
-  }
-  
-  @keyframes marquee {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-20%);
-    }
-  }
+}
