@@ -20,7 +20,6 @@
     color: var(--primary-color);
     background-color: var(--light-color);
   }
-
   /* Marquee */
   .wrapper{
     padding: 0px;
@@ -281,7 +280,7 @@
     max-width: 30%;
 
     h3 {
-      font-size: 1em;
+      font-size: 1.5em;
     }
   }
 
@@ -291,8 +290,14 @@
     gap: 1rem;
 
     .media {
-      border: 1px solid black;
       width: 33%;
+      
+    }
+
+    .media img {
+      width: 100%;
+      height: 100%;
+      object-fit: fill;
     }
   }
 
