@@ -1,0 +1,455 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    background-color: rgb(24, 24, 24);
+}
+
+.body{
+    height: 100vh;
+    width: 100vw;
+    background-color: rgb(0, 0, 0);
+    margin: none;
+    user-select: none;
+    overflow: hidden;
+    padding: 0;
+}
+
+.splash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000; 
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 1s ease-out;
+    pointer-events: none; 
+}
+
+.splash.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.backdrop {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  display: block;
+  opacity: 0.2; 
+}
+/* Marquee */
+.wrapper {
+    width: 100%;
+    height: 70px;
+    padding: 0px;
+    background-color: rgb(19, 19, 19);
+    font-size: 12px;
+    white-space: nowrap;
+    user-select: none;
+    margin: 0;
+    padding: 0;
+    z-index: 100;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .marquee-text {
+    overflow: clip;
+    transition: font-family 0.5s ease;
+    z-index: 100;
+  }
+  
+  .marquee-text-track {
+    display: flex;
+    gap: 1px;
+    width: max-content;
+    color: white;
+    animation: marqueemovetext 50s linear infinite;
+    transition: animation-duration 10s ease-in-out;
+    
+  }
+  
+  .marquee-text h1 {
+    padding: 0.3rem 2.5rem;
+  }
+  
+  @keyframes marqueemovetext {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  
+  .marquee-text-track:hover {
+    cursor: crosshair;
+  }
+
+.backdrop{
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  display: block;
+  opacity: 1; 
+  /* change opacity later */
+}
+
+
+/* this is what creates the parallax effect
+#image-track{
+    display: flex;
+    gap: 4vmin;
+    position: absolute;
+    top: 50%;
+    transform: translate(0%, -50%);
+    user-select: none;
+    justify-content: flex-end;
+}
+#image-track .image{
+    width: 40vmin;
+    height: 56vmin;
+    object-fit: cover;
+    object-position: 100% center;
+    border-radius: 0px;
+}
+.image:hover{
+    cursor:cell;
+} */
+
+/*this is the carousel css*/
+.carousel{
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  margin-top: -70px;
+  position: relative;
+  opacity: 1;
+  transition: opacity 1s ease-in-out;
+}
+.carousel.loaded {
+  opacity: 1;
+}
+.carousel .list .item {
+  position: absolute;
+  inset: 0;
+  opacity: 1;
+  transition: opacity 0.7s ease-in-out;
+  z-index: 1;
+  pointer-events: none;
+}
+.carousel .list .item.active {
+  opacity: 1;
+  z-index: 2;
+}
+
+.carousel .list .item img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.carousel .list .item .content{
+  position: absolute;
+  top: 20%;
+  width: 1140px;
+  max-width: 80%;
+  left: 10%;
+  transform: translate(-50%);
+  padding-right: 30%;
+  box-sizing: border-box;
+  color: #fff;
+  text-shadow: 0 5px 10px #0004;
+}
+.carousel .list .item .content {
+    opacity: 0; 
+    transform: translateY(20px); 
+    transition: opacity 0.5s ease, transform 0.5s ease; 
+}
+.carousel .list .item.active .content {
+    opacity: 1; 
+    transform: translateY(0); 
+}
+
+/*add text css (headline and such) here when you're done*/
+.carousel .list .item .content .buttons{
+  display: grid;
+  grid-template-columns: repeat(2, 130px);
+  grid-template-rows: 40px;
+  gap: 10px;
+  margin-top: 20px;
+}
+.carousel .list .item .content button{
+  border: none;
+  background-color: white;
+  letter-spacing: 3px;
+  font-family: --;
+  font-weight: 500;
+  cursor: pointer;
+}
+.carousel .list .item .content button:nth-child(2){
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+}
+
+/* thumbnail stuff */
+.thumbnail{
+    position: absolute;
+    bottom: 100px;
+    left: 60%;
+    width: max-content;
+    z-index: 100;
+    display: flex;
+    gap: 20px;
+}
+.thumbnail .item{
+    width: 600px;
+    height: 700px;
+    flex-shrink: 0;
+    position: relative;
+    cursor: pointer;
+}
+.thumbnail .item img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+    opacity: 0.7;
+    transition: opacity 0.3s ease; 
+}
+.thumbnail .item img:hover {
+    opacity: 1; 
+}
+.thumbnail .item .content{
+    color: #fff;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+}
+.thumbnail .item .content .text {
+    position: absolute;
+    top: 10px;
+    left: 10px; 
+    font-size: 25px;
+    font-weight: bold; 
+    color: white;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7); 
+    z-index: 1;
+}
+.thumbnail:hover{
+  cursor: pointer;
+}
+
+/* arrows */
+.arrows{
+    position: absolute;
+    top: 80%;
+    right: 52%;
+    z-index: 100;
+    width: 300px;
+    max-width: 30%;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.arrows button{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #eee4;
+    border: none;
+    color: #fff;
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 25px;
+    text-align: center;
+    transition: .5s;
+}
+.arrows button:hover{
+    background-color: #fff;
+    color: #000;
+} 
+
+/* text blur in-out */
+.carousel .list .item:nth-child(1) .content .text,
+.carousel .list .item:nth-child(1) .content .buttons
+{
+    transform: translateY(50px);
+    filter: blur(20px);
+    opacity: 0;
+    animation: showContent .5s 1s linear 1 forwards;
+}
+@keyframes showContent{
+    to{
+        transform: translateY(0px);
+        filter: blur(0px);
+        opacity: 1;
+    }
+}
+
+/* next img animation */
+.carousel.next .list .item:nth-child(1) img{
+    width: 150px;
+    height: 220px;
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    border-radius: 30px;
+    animation: showImage .5s linear 1 forwards;
+}
+@keyframes showImage{
+    to{
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+    }
+}
+
+.carousel.next .thumbnail .item:nth-last-child(1){
+    overflow: hidden;
+    animation: showThumbnail .5s linear 1 forwards;
+}
+.carousel.prev .list .item img{
+    z-index: 100;
+}
+@keyframes showThumbnail{
+    from{
+        width: 0;
+        opacity: 0;
+    }
+}
+.carousel.next .thumbnail{
+    animation: effectNext .5s linear 1 forwards;
+}
+
+@keyframes effectNext{
+    from{
+        transform: translateX(150px);
+    }
+}
+
+/* prev thumbnail behavior */
+.carousel.prev .thumbnail .item:nth-child(1) {
+    width: 0;
+    overflow: hidden;
+    opacity: 0;
+    animation: showThumbnailPrev 0.5s linear 1 forwards;
+    transition: opacity 1s ease-in-out;
+}
+
+@keyframes showThumbnailPrev {
+    from {
+        width: 150px;
+        opacity: 1;
+    }
+    to {
+        width: 0;
+        opacity: 0;
+    }
+}
+
+.carousel.prev .thumbnail .item {
+    animation: resetThumbnailPrev 0.5s linear 1 forwards;
+}
+
+@keyframes resetThumbnailPrev {
+    from {
+        opacity: 1;
+        width: 150px;
+    }
+    to {
+        opacity: 0;
+        width: 0;
+    }
+}
+
+.carousel.prev .thumbnail {
+    animation: effectPrev 0.5s linear 1 forwards;
+}
+
+@keyframes effectPrev {
+    from {
+        transform: translateX(-150px);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+/* Fix issue where the 'next' and 'prev' arrows aren't clickable during animation */
+.carousel.prev .arrows button {
+    pointer-events: auto;
+}
+
+
+
+/* timer per slide so it stays moving
+.carousel .time{
+    position: absolute;
+    z-index: 1000;
+    width: 0%;
+    height: 3px;
+    background-color: #ffffff;
+    left: 0;
+    top: 0;
+}
+
+.carousel.next .time,
+.carousel.prev .time{
+    animation: runningTime 3s linear 1 forwards;
+}
+@keyframes runningTime{
+    from{ width: 100%}
+    to{width: 0}
+} */
+
+/* logo top left*/
+.logo-container {
+    position: fixed;
+    top: 10px; /* Adjust vertical alignment */
+    left: 10px; /* Adjust horizontal alignment */
+    z-index: 1000;
+}
+.logo {
+    width: 300px; 
+    height: auto; 
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 0 5px rgba(6, 4, 129, 0.5));
+}
+.logo:hover {
+    cursor: crosshair;
+    transform: scale(1.05);
+}
+
+/* navigation */
+.navbar {
+    position: fixed;
+    top: 90px;
+    left: 350px;
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    z-index: 1000;
+}
+.navbar-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 20px; 
+}
+.navbar-menu li {
+    display: inline;
+}
+.navbar-menu a {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+.navbar-menu a:hover {
+    color: #f39c12; 
+}
