@@ -165,3 +165,69 @@ function preloadBackgroundVideo() {
 // document.addEventListener('DOMContentLoaded', () => {
 //     initializeThumbnailSlideshow();
 // });
+
+document.addEventListener('scroll', () => {
+    const introText = document.querySelector('.introtext');
+    const scrollPosition = window.scrollY;
+    const triggerPoint = 100; // Adjust this value to change when the blur starts
+
+    if (scrollPosition > triggerPoint) {
+        const blurAmount = Math.min((scrollPosition - triggerPoint) / 2, 20);
+        const opacity = Math.max(1 - (scrollPosition - triggerPoint) / 200, 0);
+
+        introText.style.filter = `blur(${blurAmount}px)`;
+        introText.style.opacity = opacity;
+    } else {
+        introText.style.filter = 'blur(0px)';
+        introText.style.opacity = 1;
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const scrollText = document.querySelector('.scroll-text');
+    setTimeout(() => {
+        scrollText.style.display = 'block';
+    }, 7000);
+});
+
+document.addEventListener('scroll', () => {
+    const introText = document.querySelector('.introtext');
+    const scrollPosition = window.scrollY;
+    const triggerPoint = 100;
+
+    if (scrollPosition > triggerPoint) {
+        const blurAmount = Math.min((scrollPosition - triggerPoint) / 2, 20);
+        const opacity = Math.max(1 - (scrollPosition - triggerPoint) / 200, 0);
+
+        introText.style.filter = `blur(${blurAmount}px)`;
+        introText.style.opacity = opacity;
+    } else {
+        introText.style.filter = 'blur(0px)';
+        introText.style.opacity = 1;
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const introText = document.querySelector('.introtext');
+    const scrollText = document.querySelector('.scroll-text');
+
+    if (!sessionStorage.getItem('hasVisited')) {
+
+        introText.style.opacity = '1';
+        introText.style.visibility = 'visible';
+
+        setTimeout(() => {
+            scrollText.style.display = 'block';
+        }, 3000);
+
+        setTimeout(() => {
+            introText.style.opacity = '0';
+            introText.style.visibility = 'hidden';
+        }, 7000);
+
+        sessionStorage.setItem('hasVisited', 'true');
+    } else {
+        introText.style.opacity = '0';
+        introText.style.visibility = 'hidden';
+    }
+});
