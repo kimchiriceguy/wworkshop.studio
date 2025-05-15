@@ -1,52 +1,40 @@
--- Create the database
+-- create the database
 CREATE DATABASE IF NOT EXISTS wworkshop_db;
 USE wworkshop_db;
 
--- Products table
-CREATE TABLE products (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    description TEXT,
+-- order items table
+CREATE TABLE IF NOT EXISTS order_items (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT NOT NULL,
+    product_name VARCHAR(255) NOT NULL,
+    quantity INT NOT NULL,
     price DECIMAL(10,2) NOT NULL,
-    image_path VARCHAR(255),
-    category VARCHAR(50),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    FOREIGN KEY (order_id) REFERENCES orders(id)
 );
 
--- Product types table for variants (e.g., sizes)
-CREATE TABLE product_types (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    product_id INT,
-    type_name VARCHAR(50),
-    price_modifier DECIMAL(10,2) DEFAULT 0,
-    FOREIGN KEY (product_id) REFERENCES products(id)
+-- products table data
+INSERT INTO products (name, description, price, images, category, types) VALUES 
+(
+    'DUST VOLUME POWER',
+    'DUST VOLUME POWDER adds volume and texture to all hair types and lengths with a natural, matte finish.',
+    380.00,
+    '["./assets/shop/prod1/1.jpg", "./assets/shop/prod1/2.webp", "./assets/shop/prod1/3.webp", "./assets/shop/prod1/4.webp", "./assets/shop/prod1/5.webp"]',
+    'grooming',
+    NULL
+),
+(
+    'SEA SALT TEXTURE SPRAY',
+    'Create a loose, lived in look with ease or to be used as a pre-styling product when blow drying.',
+    420.00,
+    '["./assets/shop/prod2/1.jpg", "./assets/shop/prod2/2.webp", "./assets/shop/prod2/3.webp", "./assets/shop/prod2/4.webp", "./assets/shop/prod2/5.webp"]',
+    'grooming',
+    NULL
+),
+(
+    'ORIGINAL WATER-BASED POMADE',
+    'Original Water-based Pomade has been designed for the discerning guy who has a particular style in mind. Perfect for timeless, classic looks – such as high pompadours, side parts, and slick backs.',
+    480.00,
+    '["./assets/shop/prod3/1.jpg", "./assets/shop/prod3/2.webp", "./assets/shop/prod3/3.webp", "./assets/shop/prod3/4.webp", "./assets/shop/prod3/5.webp"]',
+    'grooming',
+    '["NOMAD", "FURY", "REVOLT"]'
 );
-
--- Orders table
-CREATE TABLE orders (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    customer_name VARCHAR(255),
-    customer_email VARCHAR(255),
-    customer_phone VARCHAR(20),
-    total_amount DECIMAL(10,2),
-    status VARCHAR(50) DEFAULT 'pending',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Order items table
-CREATE TABLE order_items (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    order_id INT,
-    product_id INT,
-    product_type VARCHAR(50),
-    quantity INT,
-    price DECIMAL(10,2),
-    FOREIGN KEY (order_id) REFERENCES orders(id),
-    FOREIGN KEY (product_id) REFERENCES products(id)
-);
-
--- Sample product data
-INSERT INTO products (name, description, price, image_path, category) VALUES
-('DUST VOLUME POWDER', 'DUST VOLUME POWDER adds volume and texture to all hair types and lengths with a natural, matte finish.', 299.99, './assets/shop/prod1/1.jpg', 'grooming'),
-('Product 2', 'Description for product 2', 199.99, './assets/shop/prod2/1.jpg', 'grooming'),
-('Product 3', 'Description for product 3', 399.99, './assets/shop/prod3/1.jpg', 'grooming');

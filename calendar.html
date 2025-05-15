@@ -1,81 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>wworkshop.studio</title>
-    <link rel="stylesheet" href="calendar.css" />
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  </head>
-  <body>
-    <div class="wrapper">
-        <div class="marquee-text">
-            <div class="marquee-text-track" style="transform: translateX(-0%);">
-				  <h1>
-					<span>barbershop</span>
-					<span>school</span>
-					<span>consultancy</span>
-					<span>barbershop</span>
-					<span>school</span>
-					<span>consultancy</span>
-				  </h1>
-				</div>
-          </div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>wworkshop.studio</title>
+  <link rel="stylesheet" href="calendar_styles.css" />
+</head>
+
+<body>
+  <div class="logo-container">
+    <img src="./assets/logos/wworkshopstudio_5@2x copy.png" alt="Workshop Studio Logo" class="logo">
+  </div>
+
+  <div class="wrapper">
+    <div class="marquee-text">
+      <div class="marquee-text-track" style="transform: translateX(-0%);">
+        <h1>barbershop</h1>
+        <h1>school</h1>
+        <h1>consultancy</h1>
+        <h1>barbershop</h1>
+        <h1>school</h1>
+        <h1>consultancy</h1>
+        <h1>barbershop</h1>
+        <h1>school</h1>
+        <h1>consultancy</h1>
+        <h1 aria-hidden="true">barbershop</h1>
+        <h1 aria-hidden="true">school</h1>
+        <h1 aria-hidden="true">consultancy</h1>
+        <h1 aria-hidden="true">barbershop</h1>
+        <h1 aria-hidden="true">school</h1>
+        <h1 aria-hidden="true">consultancy</h1>
+        <h1 aria-hidden="true">barbershop</h1>
+        <h1 aria-hidden="true">school</h1>
+        <h1 aria-hidden="true">consultancy</h1>
+      </div>
     </div>
-    <div class="container">
-      <!-- Left Panel: Calendar -->
-      <div class="left-panel">
-        <header>
-          <div class="top-bar">
-            <div class="logo-container">
-              <img src="./assets/logo-1.png" alt="Barbershop Logo" class="logo" />
-            </div>
-            <div class="top-right">
-              <div class="booking-search">
-                <div class="dropdown">
-                  <div class="dropdown-content">
-                    <a href="#" id="haircut">Haircut</a>
-                    <a href="#" id="shave">Shave</a>
-                    <a href="#" id="styling">Styling</a>
-                    <a href="#" id="coloring">Coloring</a>
-                  </div>
-                </div>
-                <div class="search-container">
-                  <input type="text" placeholder="Search..." />
-                  <button class="search-btn"><i class="fas fa-search"></i></button>
-                  <button class="close-btn"><i class="fas fa-times"></i></button>
-                </div>
-              </div>
-              <nav class="main-nav">
-                <ul>
-                  <li><a href="index.html">HOME</a></li>
-                  <li><a href="AboutUs.html">ABOUT</a></li>
-                  <li class="dropdown">
-                    <a href="#" class="active">BOOK YOUR APPOINTMENT ▼</a>
-                    <div class="dropdown-content">
-                      <a href="#">Haircuts</a>
-                      <a href="#">Beard Trim</a>
-                      <a href="#">Hot Towel Shave</a>
-                      <a href="#">Hair Styling</a>
-                    </div>
-                  </li>
-                  <li class="dropdown">
-                    <a href="#">SHOP ▼</a>
-                    <div class="dropdown-content">
-                      <a href="#">Hair Products</a>
-                      <a href="#">Beard Care</a>
-                      <a href="#">Accessories</a>
-                    </div>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-          </div>
-        </header>
-        
-        <!-- Calendar -->
+  </div>
+
+  <nav class="navbar">
+    <ul class="navbar-menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="calendar.html" class="active">Calendar</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="shop.html">Shop</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <div class="calendar-side-layout">
+      <!-- Left side - Calendar -->
+      <div class="calendar-section">
         <div class="calendar-container">
+          <div class="calendar-header">
+            <button id="prev-month" class="month-nav">&lt;</button>
+            <h2 id="current-month"></h2>
+            <button id="next-month" class="month-nav">&gt;</button>
+          </div>
           <table id="calendar">
             <thead>
               <tr>
@@ -89,142 +71,159 @@
               </tr>
             </thead>
             <tbody>
-              <!-- Days will be dynamically added here -->
+              <!-- Calendar will be generated here -->
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- Divider -->
-      <div class="divider" id="divider"><span class="divider-icon">&gt;</span></div>
+      <!-- Right side - Appointment Info -->
+      <div class="appointment-info">
+        <button id="open-barber-modal" class="choose-barber-btn">Choose a Barber</button>
 
-      <!-- Right Panel: Booking Form -->
-      <div class="right-panel">
-        <div class="logo-label">
-          <img src="./assets/logo-2.png" alt="Barbershop Logo" style="width: 100px;">
-        </div>
-        <div id="booking-form-container">
-		<div id="success-message" style="display: none; color: green; font-weight: bold;">
-  Appointment booked successfully!
-</div>
-          <form id="booking-form" action="connect.php" method="POST">
-  <h2>Book an Appointment</h2>
-
-  <label for="service">Select Service:</label>
-  <select id="service" name="service">
-    <option value="haircut">Haircut</option>
-    <option value="shave">Shave</option>
-    <option value="styling">Styling</option>
-    <option value="coloring">Coloring</option>
-  </select>
-
-  <label for="name">Your Name:</label>
-  <input type="text" id="name" name="name" required />
-
-  <label for="date">Preferred Date:</label>
-  <input type="date" id="date" name="date" required />
-
-  <label for="time">Preferred Time:</label>
-  <input type="time" id="time" name="time" required />
-
-  <button type="submit">Book Appointment</button>
-</form>
+        <div class="appointment-details">
+          <h3>Appointment Details</h3>
+          <div class="info-item">
+            <label>Selected Barber:</label>
+            <span id="selected-barber-display">Not selected</span>
+          </div>
+          <div class="info-item">
+            <label>Selected Date:</label>
+            <span id="selected-date-display">Not selected</span>
+          </div>
+          <div class="info-item">
+            <label>Selected Time:</label>
+            <div class="time-input-wrapper">
+              <input type="time" id="time-input" class="time-input" min="11:00" max="20:00" step="3600"
+                pattern="[0-9]{2}:[0-9]{2}" required>
+              <span id="selected-time-display">Not selected</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <button id="confirm-booking" class="confirm-booking-btn" disabled>
+              Confirm Booking
+            </button>
+          </div>
         </div>
       </div>
     </div>
+  </main>
 
-    <script>
-        const divider = document.getElementById("divider");
-        let isResizing = false;
+  <!-- Barber List Modal -->
+  <div id="barber-modal" class="modal">
+    <div class="modal-content barber-list-modal">
+      <h2>Choose Hair Consultant</h2>
+      <ul class="barber-list">
+        <!-- Example barbers, replace with DB data -->
+        <li class="barber-item" data-barber="Martin">
+          <img src="assets/barbers/martin.jpg" alt="Martin" class="barber-thumb">
+          <div>
+            <strong>Martin</strong>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          </div>
+          <button class="view-portfolio-btn">Choose barber</button>
+        </li>
+        <li class="barber-item" data-barber="Dorothy">
+          <img src="assets/barbers/dorothy.jpg" alt="Dorothy" class="barber-thumb">
+          <div>
+            <strong>Dorothy</strong>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          </div>
+          <button class="view-portfolio-btn">Choose barber</button>
+        </li>
+        <li class="barber-item" data-barber="Asterio">
+          <img src="assets/barbers/asterio.jpg" alt="Asterio" class="barber-thumb">
+          <div>
+            <strong>Asterio</strong>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          </div>
+          <button class="view-portfolio-btn">Choose barber</button>
+        </li>
+        <li class="barber-item" data-barber="Gylliane">
+          <img src="assets/barbers/gylliane.jpg" alt="Gylliane" class="barber-thumb">
+          <div>
+            <strong>Gylliane</strong>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          </div>
+          <button class="view-portfolio-btn">Choose barber</button>
+        </li>
+        <!-- Add more barbers as needed -->
+      </ul>
+      <button class="modal-close" id="close-barber-modal">&times;</button>
+    </div>
+  </div>
+  <div id="modal-backdrop" class="modal-backdrop"></div>
 
-        // Calendar functionality
-        const calendarTable = document.getElementById("calendar").getElementsByTagName('tbody')[0];
-        const bookingFormContainer = document.getElementById("booking-form-container");
+  <!-- Barber Portfolio Modal -->
+  <div id="portfolio-modal" class="modal">
+    <div class="modal-content portfolio-modal-content">
+      <div class="portfolio-header">
+        <img id="portfolio-barber-img" src="" alt="Barber" class="portfolio-barber-img">
+        <div>
+          <h2 id="portfolio-barber-name"></h2>
+          <p id="portfolio-barber-bio"></p>
+        </div>
+      </div>
+      <div class="portfolio-gallery">
+        <button id="choose-barber-btn" class="choose-barber-btn">Choose Barber</button>
+        <button class="modal-close" id="close-portfolio-modal">&times;</button>
+      </div>ton id="choose-barber-btn" class="choose-barber-btn">Choose Barber</button>
+    </div>utton class="modal-close" id="close-portfolio-modal">&times;</button>
+  </div>
 
-        const daysInMonth = new Date(2025, 3, 0).getDate(); // April 2025 (month is 0-indexed)
-        const today = new Date();
-        const currentMonth = today.getMonth();
-        const currentYear = today.getFullYear();
+  <!-- Booking Modal -->
+  <div id="booking-modal" class="modal">
+    <div class="modal-content booking-modal-content">
+      <button class="modal-close" id="close-booking-modal">&times;</button>
+      <h2>Book Appointment</h2>
+      <form id="booking-form">
+        <div>
+          <label>Barber:</label>
+          <span id="booking-barber"></span>
+        </div>
+        <div>
+          <label>Date:</label>
+          <span id="booking-date"></span>
+        </div>
+        <label for="service">Service:</label>
+        <select id="service" name="service" required>
+          <option value="haircut">Haircut</option>
+          <option value="shave">Shave</option>
+          <option value="styling">Styling</option>
+          <option value="coloring">Coloring</option>
+        </select>
 
-        // Populate Calendar
-        function generateCalendar() {
-        const firstDay = new Date(currentYear, currentMonth, 1).getDay(); // First day of the month
-        const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
-        let calendarHTML = "";
-        let row = document.createElement("tr");
+        <label for="time">Time:</label>
+        <select id="time" name="time" required>
+          <!-- Times will be loaded dynamically -->
+        </select>
 
-        // Empty spaces for days before the first day of the month
-        for (let i = 0; i < firstDay; i++) {
-            row.appendChild(document.createElement("td"));
-        }
+        <label for="name">Your Name:</label>
+        <input type="text" id="name" name="name" required />
 
-        // Fill in the days of the month
-        days.forEach((day, index) => {
-            const dayCell = document.createElement("td");
-            dayCell.textContent = day;
-            dayCell.classList.add("calendar-day");
-            dayCell.onclick = function () {
-            showBookingForm(day);
-            };
-            row.appendChild(dayCell);
+        <label for="email">Your Email:</label>
+        <input type="email" id="email" name="email" required />
 
-            // After 7 days, start a new row
-            if ((index + firstDay) % 7 === 6) {
-            calendarHTML += row.outerHTML;
-            row = document.createElement("tr");
-            }
-        });
+        <label for="phone">Your Phone:</label>
+        <input type="tel" id="phone" name="phone" required />
 
-        // Add any remaining days to the table
-        if (row.children.length > 0) {
-            calendarHTML += row.outerHTML;
-        }
+        <button type="submit" class="submit-btn">Confirm Booking</button>
+      </form>
+    </div>
+  </div>
 
-        calendarTable.innerHTML = calendarHTML;
-        }
+  <!-- errors -->
+  <div id="error-modal" class="modal">
+    <div class="modal-content error-modal-content">
+      <h2>Notice</h2>
+      <p id="error-message"></p>
+      <button class="close-error-btn">OK</button>
+    </div>
+  </div>
 
-        // Show booking form when a day is clicked
-        function showBookingForm(day) {
-        // Remove 'hidden' class to display the form
-        bookingFormContainer.classList.remove('hidden');
-        
-        // Pre-fill the booking form with the clicked day (optional, e.g., display selected day in the form)
-        const nameField = document.getElementById("name");
-        nameField.value = ''; // Reset name input
+  <script src="calendar_script.js"></script>
 
-        }
+</body>
 
-        // Initialize Calendar
-        generateCalendar();
 
-        // Resizing functionality
-        divider.addEventListener("mousedown", (event) => {
-        isResizing = true;
-        document.addEventListener("mousemove", resize);
-        document.addEventListener("mouseup", stopResize);
-        });
-
-        function resize(event) {
-        if (isResizing) {
-            let leftWidth = event.clientX / window.innerWidth * 100;
-            document.querySelector(".left-panel").style.flex = `0 0 ${leftWidth}%`;
-            document.querySelector(".right-panel").style.flex = `0 0 ${100 - leftWidth}%`;
-        }
-        }
-
-        function stopResize() {
-        isResizing = false;
-        document.removeEventListener("mousemove", resize);
-        document.removeEventListener("mouseup", stopResize);
-        }
-		if (window.location.search.includes("success=1")) {
-  const message = document.getElementById("success-message");
-  if (message) {
-    message.style.display = "block";
-  }
-  // Remove the query string so it doesn't show the message again on refresh
-  window.history.replaceState({}, document.title, window.location.pathname);
-}
-    </script>
-  </body>
 </html>

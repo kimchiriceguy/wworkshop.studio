@@ -42,7 +42,7 @@
 
     <nav class="navbar">
         <ul class="navbar-menu">
-            <li><a href="homepage.html">Home</a></li>
+            <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About</a></li>
             <li><a href="calendar.html">Calendar</a></li>
             <li><a href="services.html">Services</a></li>
@@ -139,7 +139,7 @@
         </div>
     </div>
 
-    <!-- modal -->
+    <!-- modal main -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <span id="modal-close" class="modal-close">&times;</span>
@@ -155,6 +155,11 @@
                 <p style="margin-bottom: 0.5rem;">Select a type:</p>
                 <div id="TYPE-options" style="display: flex; gap: 0.5rem; justify-content: center;"></div>
             </div>
+            <div class="quantity-picker">
+                <button class="quantity-btn" id="decrease-qty">-</button>
+                <input type="number" id="quantity-input" value="1" min="1" max="10">
+                <button class="quantity-btn" id="increase-qty">+</button>
+            </div>
             <button class="add-to-cart">Add to Cart</button>
         </div>
 
@@ -165,7 +170,7 @@
         <span id="cart-count" style="font-family: Inconsolata, monospace;">0</span>
     </div>
 
-    <!-- Cart Modal -->
+    <!-- cart modal thing -->
     <div id="cart-modal" class="modal">
         <div class="modal-content cart-content">
             <span id="cart-close" class="modal-close">&times;</span>
@@ -173,7 +178,16 @@
             <div id="cart-items"></div>
             <div class="cart-total">
                 <p>Total: <span id="cart-total-amount">P0</span></p>
+                <button id="buy-now-btn" class="buy-now-button">Buy Now</button>
             </div>
+        </div>
+    </div>
+
+    <!-- shows order status -->
+    <div id="status-modal" class="modal">
+        <div class="modal-content status-content">
+            <span id="status-close" class="modal-close">&times;</span>
+            <div id="status-message"></div>
         </div>
     </div>
 

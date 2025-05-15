@@ -384,6 +384,7 @@ html {
 
 .cart-content {
     max-width: 600px !important;
+    padding: 20px;
 }
 
 #cart-items {
@@ -423,7 +424,127 @@ html {
 
 .cart-total {
     text-align: right;
-    padding-top: 1rem;
-    font-weight: bold;
+    padding: 1rem;
     border-top: 2px solid #eee;
+    margin-top: 1rem;
+}
+
+.buy-now-button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #000;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    margin-top: 15px;
+    cursor: pointer;
+    font-family: Inconsolata, monospace;
+    transition: all 0.3s ease;
+}
+
+.buy-now-button:hover {
+    background-color: #333;
+    transform: scale(1.02);
+}
+
+.status-content {
+    padding: 20px;
+    text-align: center;
+    max-width: 400px;
+    position: relative;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+#status-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.3s ease;
+}
+
+#status-close:hover {
+    color: #000;
+}
+
+.status-success {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.status-error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.quantity-picker,
+.cart-quantity-picker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.quantity-btn {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quantity-btn:hover {
+    background: #f5f5f5;
+}
+
+#quantity-input {
+    width: 50px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+.quantity-display {
+    min-width: 30px;
+    text-align: center;
+}
+
+.cart-quantity-picker {
+    margin: 10px 0;
+}
+
+.cart-item-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }

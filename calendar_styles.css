@@ -1,0 +1,750 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap');
+
+/* Reset and main container */
+body {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: "Inconsolata", monospace;
+  background: black;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+  padding: 2rem;
+  margin-top: 0;
+  position: relative;
+}
+
+/*  */
+.calendar-container {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  padding: 3rem;
+  width: 100%;
+  max-width: 1000px;
+  position: relative;
+  margin: 0 auto;
+  z-index: 20;
+}
+
+/*  */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 0 1rem;
+}
+
+#current-month {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #222;
+  margin: 0;
+}
+
+/* months */
+#prev-month,
+#next-month {
+  background: #222;
+  color: #fff;
+  border: none;
+  padding: 0.8rem 1.2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1.2rem;
+}
+
+#prev-month:hover,
+#next-month:hover {
+  background: #f7c873;
+  color: #222;
+  transform: scale(1.05);
+}
+
+/* actual calendar */
+#calendar {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+#calendar th,
+#calendar td {
+  text-align: center;
+  padding: 1.5rem;
+  border: 1px solid #eee;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+#calendar th {
+  background: #222;
+  color: #fff;
+  font-weight: bold;
+}
+
+.calendar-day,
+#calendar td {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.calendar-day:hover,
+#calendar td:hover {
+  background: #f7c873;
+  color: #222;
+  transform: scale(1.05);
+}
+
+.current-day {
+  background: #f7c873;
+  color: #222;
+  font-weight: 900;
+}
+
+.empty-day,
+.empty {
+  background: #f5f5f5;
+  cursor: default !important;
+  font-weight: normal !important;
+}
+
+.empty-day:hover,
+.empty:hover {
+  background: #f5f5f5 !important;
+  transform: none !important;
+}
+
+
+#calendar th:first-child,
+#calendar td:first-child {
+  color: #ff4444;
+}
+
+#calendar td:first-child:hover {
+  background: #f7c873;
+  color: #ff4444;
+}
+
+#calendar td.current-day:first-child {
+  color: #ff4444;
+  font-weight: bold;
+}
+
+/* Marquee */
+.wrapper {
+  width: 100%;
+  height: 70px;
+  background-color: rgb(19, 19, 19);
+  font-size: 12px;
+  white-space: nowrap;
+  user-select: none;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  font-family: "Inconsolata", monospace;
+  margin: 0;
+  padding: 0;
+  z-index: 40;
+}
+
+.marquee-text {
+  overflow: clip;
+  transition: font-family 0.5s ease;
+  z-index: 40;
+}
+
+.marquee-text-track {
+  display: flex;
+  gap: 1px;
+  width: max-content;
+  color: white;
+  animation: marqueemovetext 50s linear infinite;
+}
+
+.marquee-text h1 {
+  padding: 0.3rem 2.5rem;
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.marquee-text h1:hover,
+.marquee-text-track:hover {
+  color: #8400ff;
+  cursor: crosshair;
+}
+
+@keyframes marqueemovetext {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Navigation */
+.navbar {
+  position: fixed;
+  top: 110px;
+  left: 230px;
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  z-index: 45;
+  width: 42%;
+  border-bottom: 2px solid white;
+  font-family: "Inconsolata", monospace;
+}
+
+.navbar-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 75px;
+}
+
+.navbar-menu li {
+  display: inline;
+}
+
+.navbar-menu a {
+  text-decoration: none;
+  color: white;
+  font-size: 33px;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.navbar-menu a:hover {
+  color: #f39c12;
+}
+
+/* Logo */
+.logo-container {
+  position: fixed;
+  top: -9px;
+  left: -40px;
+  z-index: 50;
+}
+
+.logo {
+  width: 300px;
+  height: auto;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 0 5px rgba(75, 2, 192, 0.5));
+  z-index: 20;
+  transform: scale(0.6);
+}
+
+.logo:hover {
+  cursor: crosshair;
+  transform: scale(0.62);
+}
+
+/* calendar stfuf */
+.container,
+.calendar-main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+  margin: 3rem auto;
+  max-width: 1100px;
+  background: #fafafa;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  padding: 0;
+  width: 90vw;
+  overflow: hidden;
+}
+
+.left-panel,
+.calendar-left-panel {
+  flex: 1 1 45%;
+  background: #fff;
+  padding: 2rem 1.5rem;
+  border-right: 2px solid #f7c873;
+  min-width: 320px;
+  box-sizing: border-box;
+}
+
+.right-panel,
+.calendar-right-panel {
+  flex: 1 1 55%;
+  background: #f7f7f7;
+  padding: 2rem 1.5rem;
+  min-width: 320px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.divider,
+.calendar-divider {
+  width: 12px;
+  background: #f7c873;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: ew-resize;
+  user-select: none;
+}
+
+.divider-icon {
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+/* Booking Form */
+#booking-form-container {
+  width: 100%;
+  max-width: 400px;
+  margin: 2rem auto 0 auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  padding: 2rem 1.5rem;
+}
+
+#booking-form h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #222;
+}
+
+#booking-form label {
+  display: block;
+  margin-top: 1rem;
+  margin-bottom: 0.3rem;
+  font-weight: 600;
+  color: #222;
+}
+
+#booking-form input,
+#booking-form select {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-bottom: 0.8rem;
+  background: #fafafa;
+  transition: border 0.2s;
+}
+
+#booking-form input:focus,
+#booking-form select:focus {
+  border: 1.5px solid #f7c873;
+  outline: none;
+}
+
+#booking-form button[type="submit"] {
+  width: 100%;
+  padding: 0.8rem;
+  background: #f7c873;
+  color: #222;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+#booking-form button[type="submit"]:hover {
+  background: #222;
+  color: #fff;
+}
+
+#success-message {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #27ae60;
+  font-weight: bold;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 85;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 600px;
+  width: 95vw;
+  position: relative;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+  z-index: 90;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #888;
+  cursor: pointer;
+}
+
+.barber-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.barber-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  background: #f7f7f7;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.barber-thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #f7c873;
+}
+
+.view-portfolio-btn {
+  margin-left: auto;
+  background: #f7c873;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.view-portfolio-btn:hover {
+  background: #222;
+  color: #fff;
+}
+
+.portfolio-modal-content {
+  max-width: 800px;
+}
+
+.portfolio-header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.portfolio-barber-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #f7c873;
+}
+
+.portfolio-gallery {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.portfolio-gallery img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.booking-modal-content {
+  max-width: 400px;
+}
+
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  z-index: 80;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+/* Calendar Layout */
+.calendar-side-layout {
+  display: flex;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  position: relative;
+}
+
+.calendar-section {
+  flex: 1;
+  min-width: 0;
+}
+
+/* appointment stuff */
+.appointment-info {
+  width: 200px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 120px;
+  height: fit-content;
+  z-index: 25;
+}
+
+.appointment-details {
+  margin-top: 2rem;
+}
+
+.appointment-details h3 {
+  color: #222;
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+}
+
+.info-item {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.info-item label {
+  display: block;
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+}
+
+.info-item span {
+  display: block;
+  color: #222;
+  font-weight: bold;
+}
+
+/* Barber selection button */
+.choose-barber-btn {
+  width: 100%;
+  background: #222;
+  color: #fff;
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 1.5rem;
+}
+
+.choose-barber-btn:hover {
+  background: #f7c873;
+  color: #222;
+  transform: scale(1.02);
+}
+
+/* Error Modal Styles */
+.error-modal-content {
+  max-width: 400px;
+  text-align: center;
+  padding: 2rem;
+}
+
+.error-modal-content h2 {
+  color: #222;
+  margin-bottom: 1rem;
+}
+
+.close-error-btn {
+  background: #222;
+  color: #fff;
+  border: none;
+  padding: 0.8rem 2rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  margin-top: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.close-error-btn:hover {
+  background: #f7c873;
+  color: #222;
+  transform: scale(1.05);
+}
+
+/* selected date style */
+.selected-date {
+  background: #f7c873 !important;
+  color: #222 !important;
+  font-weight: bold;
+}
+
+.selected-date:hover {
+  transform: none !important;
+}
+
+.time-slots {
+  display: none;
+}
+
+.time-input-wrapper {
+  margin-top: 0.5rem;
+}
+
+.time-input {
+  width: 100%;
+  padding: 0.8rem;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: "Inconsolata", monospace;
+  color: #222;
+  transition: all 0.2s ease;
+}
+
+.time-input:hover {
+  border-color: #f7c873;
+}
+
+.time-input:focus {
+  outline: none;
+  border-color: #f7c873;
+  box-shadow: 0 0 0 2px rgba(247, 200, 115, 0.2);
+}
+
+/* Invalid time selection */
+.time-input:invalid {
+  border-color: #ff4444;
+}
+
+.time-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.time-input::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+.confirm-booking-btn {
+  width: 100%;
+  padding: 1rem;
+  background: #222;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 2rem;
+}
+
+.confirm-booking-btn:hover:not(:disabled) {
+  background: #f7c873;
+  color: #222;
+  transform: scale(1.02);
+}
+
+.confirm-booking-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+
+  .container,
+  .calendar-main-container {
+    flex-direction: column;
+    min-width: 0;
+    max-width: 98vw;
+    margin: 1rem auto;
+  }
+
+  .left-panel,
+  .calendar-left-panel,
+  .right-panel,
+  .calendar-right-panel {
+    min-width: 0;
+    width: 100%;
+    border-right: none;
+    border-bottom: 2px solid #f7c873;
+    padding: 1rem;
+  }
+
+  .divider,
+  .calendar-divider {
+    width: 100%;
+    height: 12px;
+    cursor: ns-resize;
+  }
+}
+
+@media (max-width: 600px) {
+
+  .container,
+  .calendar-main-container {
+    width: 100vw;
+    min-width: 0;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .logo-container {
+    margin: 1rem 0;
+  }
+
+  #booking-form-container {
+    padding: 1rem 0.5rem;
+  }
+}
+
+.hidden {
+  display: none !important;
+}

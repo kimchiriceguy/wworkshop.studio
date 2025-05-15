@@ -6,6 +6,9 @@ const modalPrice = document.getElementById('modal-price');
 const modalClose = document.getElementById('modal-close');
 const prevBtn = document.getElementById('prev-btn');
 const nextBtn = document.getElementById('next-btn');
+const statusModal = document.getElementById('status-modal');
+const statusClose = document.getElementById('status-close');
+
 
 let currentImages = [];
 let currentIndex = 0;
@@ -71,7 +74,7 @@ nextBtn.addEventListener('click', () => {
 });
 
 // cart functionality
-let cart = [];
+let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
 const cartModal = document.getElementById('cart-modal');
 const cartClose = document.getElementById('cart-close');
 const cartItems = document.getElementById('cart-items');
@@ -95,20 +98,27 @@ cartModal.addEventListener('click', (e) => {
 
 //CART modal popup thingamajig
 document.querySelector('.add-to-cart').addEventListener('click', () => {
+    const quantity = parseInt(document.getElementById('quantity-input').value);
     const item = {
         id: Date.now(),
         name: document.getElementById('modal-title').textContent,
-        price: document.getElementById('modal-price').textContent,
-        image: document.getElementById('modal-img').src
+        price: parseFloat(document.getElementById('modal-price').textContent.replace('P', '')),
+        image: document.getElementById('modal-img').src,
+        quantity: quantity || 1
     };
 
     cart.push(item);
+    sessionStorage.setItem('cart', JSON.stringify(cart));
+    console.log('Item added to cart:', item);
+    console.log('Cart after add:', cart);
     updateCartCount();
     updateCartDisplay();
+    modal.classList.remove('show');
 });
 
 function updateCartCount() {
-    cartCount.textContent = cart.length;
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    cartCount.textContent = totalItems;
 }
 
 function updateCartDisplay() {
@@ -116,27 +126,157 @@ function updateCartDisplay() {
     let total = 0;
 
     cart.forEach(item => {
-        const itemPrice = parseInt(item.price.replace(/[^\d]/g, ''));
-        total += itemPrice;
-
         const cartItem = document.createElement('div');
         cartItem.className = 'cart-item';
         cartItem.innerHTML = `
             <img src="${item.image}" alt="${item.name}">
             <div class="cart-item-details">
                 <h3>${item.name}</h3>
-                <p class="cart-item-price">${item.price}</p>
+                <p class="cart-item-price">P${item.price.toFixed(2)}</p>
+                <div class="cart-quantity-picker">
+                    <button class="quantity-btn" onclick="updateCartQuantity(${item.id}, -1)">-</button>
+                    <span class="quantity-display">${item.quantity}</span>
+                    <button class="quantity-btn" onclick="updateCartQuantity(${item.id}, 1)">+</button>
+                </div>
             </div>
             <button onclick="removeFromCart(${item.id})" class="remove-item">×</button>
         `;
         cartItems.appendChild(cartItem);
+        total += item.price * item.quantity;
     });
 
-    cartTotal.textContent = `P${total}`;
+    cartTotal.textContent = `P${total.toFixed(2)}`;
 }
 
+// Add the remove from cart function
 function removeFromCart(itemId) {
     cart = cart.filter(item => item.id !== itemId);
+    sessionStorage.setItem('cart', JSON.stringify(cart));
+    console.log('Cart after remove:', cart);
     updateCartCount();
     updateCartDisplay();
 }
+
+// Update the quantity change function
+function updateCartQuantity(itemId, change) {
+    const item = cart.find(item => item.id === itemId);
+    if (item) {
+        const newQty = item.quantity + change;
+        if (newQty >= 1 && newQty <= 10) {
+            item.quantity = newQty;
+            sessionStorage.setItem('cart', JSON.stringify(cart));
+            console.log('Cart after quantity update:', cart);
+            updateCartCount();
+            updateCartDisplay();
+        }
+    }
+}
+
+const addToCart = () => {
+    const quantity = parseInt(document.getElementById('quantity-input').value);
+    const item = {
+        id: Date.now(),
+        name: document.getElementById('modal-title').textContent,
+        price: parseFloat(document.getElementById('modal-price').textContent.replace('P', '')),
+        image: document.getElementById('modal-img').src,
+        quantity: quantity
+    };
+
+    cart.push(item);
+    updateCartCount();
+    updateCartDisplay();
+    modal.style.display = 'none';
+};
+
+// close !
+statusClose.addEventListener('click', () => {
+    statusModal.classList.remove('show');
+});
+
+// close! but click outside
+statusModal.addEventListener('click', (e) => {
+    if (e.target === statusModal) {
+        statusModal.classList.remove('show');
+    }
+});
+
+//order process functionality
+document.getElementById('buy-now-btn').addEventListener('click', async function () {
+    console.log('Cart being sent to server:', cart);
+    try {
+        const response = await fetch('process_order.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ cart }) // send cart data
+        });
+
+        const result = await response.json();
+        console.log('Server response:', result);
+        const statusModal = document.getElementById('status-modal');
+        const statusMessage = document.getElementById('status-message');
+
+        document.getElementById('cart-modal').classList.remove('show');
+
+        if (result.success) {
+            statusMessage.innerHTML = `
+                <div class="status-success">
+                    <h3>Order Placed Successfully!</h3>
+                    <p>Thank you for your purchase.</p>
+                </div>
+            `;
+            cart = [];
+            sessionStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            updateCartDisplay();
+        } else {
+            statusMessage.innerHTML = `
+                <div class="status-error">
+                    <h3>Error Processing Order</h3>
+                    <p>${result.message}</p>
+                </div>
+            `;
+        }
+
+        statusModal.classList.add('show');
+    } catch (error) {
+        console.error('Error:', error);
+        const statusModal = document.getElementById('status-modal');
+        const statusMessage = document.getElementById('status-message');
+
+        statusMessage.innerHTML = `
+            <div class="status-error">
+                <h3>Error Processing Order</h3>
+                <p>An unexpected error occurred. Please try again.</p>
+            </div>
+        `;
+        statusModal.classList.add('show');
+    }
+});
+
+document.getElementById('increase-qty').addEventListener('click', () => {
+    const input = document.getElementById('quantity-input');
+    const currentValue = parseInt(input.value);
+    if (currentValue < 10) {
+        input.value = currentValue + 1;
+    }
+});
+
+document.getElementById('decrease-qty').addEventListener('click', () => {
+    const input = document.getElementById('quantity-input');
+    const currentValue = parseInt(input.value);
+    if (currentValue > 1) {
+        input.value = currentValue - 1;
+    }
+});
+
+document.getElementById('quantity-input').addEventListener('change', (e) => {
+    const value = parseInt(e.target.value);
+    if (value < 1) e.target.value = 1;
+    if (value > 10) e.target.value = 10;
+});
+
+cart = [{ id: 1, name: "Test", price: 100, quantity: 2 }];
+sessionStorage.setItem('cart', JSON.stringify(cart));
+console.log(cart);
