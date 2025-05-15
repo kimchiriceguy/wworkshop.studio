@@ -1,0 +1,3 @@
+Updates:
+03/27 - index.html (lines 11 - 36), style.css (lines 25-52), AboutUs.html (lines 16-41), styles_AboutUs.css (lines 25-52)
+Changed: Fixed infinite marquee, should now infinitely scroll.
