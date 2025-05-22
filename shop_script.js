@@ -15,7 +15,13 @@ let currentIndex = 0;
 
 document.querySelectorAll('.shopdiv .item').forEach(item => {
     item.addEventListener('click', () => {
-        currentImages = JSON.parse(item.dataset.images);
+        try {
+            currentImages = JSON.parse(item.dataset.images);
+        } catch (e) {
+            console.error("Invalid JSON in data-images", e);
+            currentImages = [];
+        }
+        
         currentIndex = 0;
 
         modalTitle.textContent = item.querySelector('h2').textContent;
@@ -29,7 +35,6 @@ document.querySelectorAll('.shopdiv .item').forEach(item => {
 
         if (item.dataset.types) {
             const types = JSON.parse(item.dataset.types);
-            typeOptions.innerHTML = ''; // Clear previous options
 
             types.forEach(type => {
                 const button = document.createElement('button');
@@ -141,6 +146,7 @@ function updateCartDisplay() {
             </div>
             <button onclick="removeFromCart(${item.id})" class="remove-item">×</button>
         `;
+        console.log(item.image);
         cartItems.appendChild(cartItem);
         total += item.price * item.quantity;
     });
@@ -253,6 +259,10 @@ document.getElementById('buy-now-btn').addEventListener('click', async function 
         `;
         statusModal.classList.add('show');
     }
+    cart = [];
+    sessionStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+    updateCartDisplay();
 });
 
 document.getElementById('increase-qty').addEventListener('click', () => {
@@ -276,7 +286,3 @@ document.getElementById('quantity-input').addEventListener('change', (e) => {
     if (value < 1) e.target.value = 1;
     if (value > 10) e.target.value = 10;
 });
-
-cart = [{ id: 1, name: "Test", price: 100, quantity: 2 }];
-sessionStorage.setItem('cart', JSON.stringify(cart));
-console.log(cart);

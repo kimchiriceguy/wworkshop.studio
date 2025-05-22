@@ -1,34 +1,45 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 $host = "localhost";
 $username = "root";
 $password = "";
 $database = "test2calendar";
 
-// Create connection
 $conn = new mysqli($host, $username, $password, $database);
 
-// Check connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die(json_encode(["success" => false, "message" => "Connection failed: " . $conn->connect_error]));
 }
 
-// Get data from form
-$name = $_POST['name'];
-$service = $_POST['service'];
-$date = $_POST['date'];
-$time = $_POST['time'];
+// Accept JSON input
+$data = json_decode(file_get_contents('php://input'), true);
 
-// Insert into database
-$sql = "INSERT INTO appointments (name, service, date, time) VALUES (?, ?, ?, ?)";
+if (
+    !isset($data['barber']) ||
+    !isset($data['date']) ||
+    !isset($data['time'])
+) {
+    die(json_encode(["success" => false, "message" => "Missing required form fields."]));
+}
+
+$barber = $data['barber'];
+$date = $data['date'];
+$time = $data['time'];
+
+$sql = "INSERT INTO appointment(barber, date, time) VALUES (?, ?, ?)";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ssss", $name, $service, $date, $time);
+if (!$stmt) {
+    die(json_encode(["success" => false, "message" => "Prepare failed: " . $conn->error]));
+}
+$stmt->bind_param("sss", $barber, $date, $time);
 
 if ($stmt->execute()) {
-    // Redirect back to the form with a success flag
-    header("Location: calendar.html?success=1");
-    exit();
+    echo json_encode(["success" => true]);
 } else {
-    echo "Error: " . $stmt->error;
+    echo json_encode(["success" => false, "message" => $stmt->error]);
 }
 
 $stmt->close();

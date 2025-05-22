@@ -15,13 +15,13 @@ let currentYear = new Date().getFullYear();
 // DOM Elements
 const calendar = document.getElementById("calendar");
 const currentMonthDisplay = document.getElementById("current-month");
-const barberList = document.getElementById("barber-list");
 const bookingModal = document.getElementById("booking-modal");
 const prevMonthBtn = document.getElementById("prev-month");
 const nextMonthBtn = document.getElementById("next-month");
 const timeInput = document.getElementById('time-input');
 const timeDisplay = document.getElementById('selected-time-display');
 const confirmBtn = document.getElementById('confirm-booking');
+const barberList = document.querySelector('.barber-list');
 
 function showError(message) {
     const errorModal = document.getElementById('error-modal');
@@ -103,6 +103,9 @@ function generateCalendar() {
                     // Update the display
                     document.getElementById('selected-date-display').textContent = formattedDate;
 
+                    // Example: when a date is selected
+                    document.getElementById('date-input').value = selectedDate;
+
                     // Reset time selection
                     document.getElementById('selected-time-display').textContent = 'Not selected';
                     selectedTime = null;
@@ -126,7 +129,6 @@ function generateCalendar() {
 }
 
 function generateBarberList() {
-    barberList.innerHTML = "";
     barbers.forEach((barber) => {
         const card = document.createElement("div");
         card.className = "barber-card";
@@ -141,6 +143,9 @@ function generateBarberList() {
                 .forEach(c => c.classList.remove("selected"));
             card.classList.add("selected");
             generateCalendar(); // Refresh calendar for new barber
+
+            // Example: when a barber is selected
+            document.getElementById('barber-input').value = selectedBarber.name;
         });
 
         barberList.appendChild(card);
@@ -173,7 +178,7 @@ function initializeTimeSlots() {
             this.classList.add('selected');
 
             // Update selected time
-            selectedTime = this.dataset.time;
+            selectedTime = this.dataset.time; // This should be a string like "14:30"
 
             // Format time for display (convert 24h to 12h format)
             const timeDisplay = new Date(`2000-01-01T${selectedTime}`).toLocaleTimeString('en-US', {
@@ -187,11 +192,14 @@ function initializeTimeSlots() {
             validateBooking(); // Validate booking fields
         });
     });
+    console.log(selectedTime);
+    console.log("passed");
 }
 
 // Check if all required fields are filled
 function validateBooking() {
-    const isValid = selectedBarber && selectedDate && timeInput.value;
+    // Only require barber and date
+    const isValid = selectedBarber && selectedDate;
     confirmBtn.disabled = !isValid;
     return isValid;
 }
@@ -304,29 +312,25 @@ timeInput.addEventListener('change', function () {
     if (!selectedDate) {
         showError("Please select a date first");
         this.value = '';
+        document.getElementById('selected-time-display').textContent = 'Not selected';
+        selectedTime = null;
         return;
     }
 
-    const selectedTime = this.value;
-    const [hours, minutes] = selectedTime.split(':');
-    const timeValue = parseInt(hours);
+    selectedTime = this.value; // "14:30" string
 
-    // Validate time is between 11 AM and 8 PM
-    if (timeValue < 11 || timeValue > 20) {
-        showError("Please select a time between 11:00 AM and 8:00 PM");
-        this.value = '';
-        return;
+    // Format and display the selected time
+    if (selectedTime) {
+        const formatted = new Date(`2000-01-01T${selectedTime}`).toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true
+        });
+        document.getElementById('selected-time-display').textContent = formatted;
+    } else {
+        document.getElementById('selected-time-display').textContent = 'Not selected';
     }
-
-    // Format time for display
-    const formattedTime = new Date(`2000-01-01T${selectedTime}`).toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true
-    });
-
-    timeDisplay.textContent = formattedTime;
-    validateBooking(); // Validate booking fields
+    validateBooking();
 });
 
 confirmBtn.addEventListener('click', async function () {
@@ -335,39 +339,42 @@ confirmBtn.addEventListener('click', async function () {
         return;
     }
 
-    try {
-        const bookingData = {
-            barber: selectedBarber.name,
-            date: selectedDate.toISOString().split('T')[0],
-            time: timeInput.value,
-            customer: 'Customer Name' // You might want to add a customer name input field
-        };
-
-        const response = await fetch('connect.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(bookingData)
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            showSuccess("Booking confirmed successfully!");
-            // Reset form
-            selectedBarber = null;
-            selectedDate = null;
-            timeInput.value = '';
-            document.getElementById('selected-barber-display').textContent = 'Not selected';
-            document.getElementById('selected-date-display').textContent = 'Not selected';
-            document.getElementById('selected-time-display').textContent = 'Not selected';
-            generateCalendar();
-        } else {
-            showError("Booking failed: " + result.message);
-        }
-    } catch (error) {
-        showError("An error occurred while booking");
-        console.error(error);
+    // Ensure date and time are strings
+    let dateString = selectedDate;
+    if (selectedDate instanceof Date) {
+        dateString = selectedDate.toISOString().slice(0, 10);
     }
+
+    let timeString = selectedTime;
+    if (selectedTime instanceof Date) {
+        timeString = selectedTime.toTimeString().slice(0, 5);
+    }
+
+    const bookingData = {
+        barber: selectedBarber.name,
+        date: dateString, // "YYYY-MM-DD"
+        time: timeString  // "HH:MM"
+    };
+
+    console.log("Booking data to send:", bookingData);
+
+    const response = await fetch('connect.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(bookingData)
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+        document.getElementById('success-modal').classList.add('show');
+    } else {
+        showError(result.message || "Booking failed.");
+    }
+});
+
+document.querySelector('.close-success-btn').addEventListener('click', function () {
+    document.getElementById('success-modal').classList.remove('show');
 });
