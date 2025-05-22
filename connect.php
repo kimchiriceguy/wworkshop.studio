@@ -29,7 +29,7 @@ $barber = $data['barber'];
 $date = $data['date'];
 $time = $data['time'];
 
-$sql = "INSERT INTO appointment(barber, date, time) VALUES (?, ?, ?)";
+$sql = "INSERT INTO appointments (barber, date, time) VALUES (?, ?, ?)";
 $stmt = $conn->prepare($sql);
 if (!$stmt) {
     die(json_encode(["success" => false, "message" => "Prepare failed: " . $conn->error]));
