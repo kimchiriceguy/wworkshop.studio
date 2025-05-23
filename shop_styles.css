@@ -288,7 +288,7 @@ html {
 .shop-header {
     position: absolute;
     top: 250px;
-    left: 60px;
+    left: 230px;
     color: white;
     font-family: "Inconsolata", monospace;
     text-transform: uppercase;
@@ -307,7 +307,7 @@ html {
 .shop-header-2 {
     position: absolute;
     top: 673px;
-    left: 60px;
+    left: 230px;
     color: white;
     font-family: "Inconsolata", monospace;
     text-transform: uppercase;
