@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // First visit
         introText.style.opacity = '1';
         introText.style.visibility = 'visible';
-        
+
         // Show scroll text after delay
         setTimeout(() => {
             scrollText.style.display = 'block';

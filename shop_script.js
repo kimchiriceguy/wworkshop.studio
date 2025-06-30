@@ -21,7 +21,7 @@ document.querySelectorAll('.shopdiv .item').forEach(item => {
             console.error("Invalid JSON in data-images", e);
             currentImages = [];
         }
-        
+
         currentIndex = 0;
 
         modalTitle.textContent = item.querySelector('h2').textContent;
