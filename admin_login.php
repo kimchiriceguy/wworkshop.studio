@@ -4,7 +4,7 @@ session_start();
 $host = "localhost";
 $username = "root";
 $password = "";
-$database = "test2calendar";
+$database = "wworkshopdb";
 
 //to test2calendar PLEASE get around to changing the db name
 $conn = new mysqli($host, $username, $password, $database);

@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 $host = "localhost";
 $username = "root";
 $password = "";
-$database = "test2calendar";
+$database = "wworkshopdb";
 
 $conn = new mysqli($host, $username, $password, $database);
 

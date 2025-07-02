@@ -9,7 +9,7 @@ if (!isset($_SESSION['admin_logged_in']) || !$_SESSION['admin_logged_in']) {
 $host = "localhost";
 $username = "root";
 $password = "";
-$dbname = "test2calendar";
+$dbname = "wworkshopdb";
 
 $conn = new mysqli($host, $username, $password, $dbname);
 if ($conn->connect_error) {

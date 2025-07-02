@@ -29,7 +29,7 @@ document.querySelectorAll('.shopdiv .item').forEach(item => {
         modalPrice.textContent = item.dataset.price;
         modalImg.src = currentImages[currentIndex];
 
-        // Handle type picker
+        //this to pick types and stuff
         const typePicker = document.getElementById('TYPE-picker');
         const typeOptions = document.getElementById('TYPE-options');
 
@@ -163,7 +163,7 @@ function removeFromCart(itemId) {
     updateCartDisplay();
 }
 
-// Update the quantity change function
+// update quant cart
 function updateCartQuantity(itemId, change) {
     const item = cart.find(item => item.id === itemId);
     if (item) {
