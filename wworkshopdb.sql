@@ -28,7 +28,6 @@ CREATE TABLE `purchases` (
   `quantity` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---this is admin stuff
 INSERT INTO `admin_users` (`id`, `username`, `password`) VALUES
 (1, 'admin', '$2y$10$6CCj1MoZNDyIela/D/zxC.NjYyefDPQjt4Vnt3h8o8HbIVPRVtrpi');
 
