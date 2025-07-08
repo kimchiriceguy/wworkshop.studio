@@ -59,7 +59,7 @@ class Cart {
     }
 }
 
-// Handle AJAX requests
+// handling requests (ajax)
 if (isset($_POST['action'])) {
     $cart = new Cart();
     

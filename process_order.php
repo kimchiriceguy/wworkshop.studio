@@ -37,7 +37,7 @@ if (!$stmt) {
 
 foreach ($cart as $item) {
     if (
-        !isset($item['item']) ||
+        !isset($item['name']) ||
         !isset($item['quantity']) ||
         !isset($item['price'])
     ) {

@@ -106,7 +106,7 @@ document.querySelector('.add-to-cart').addEventListener('click', () => {
     const quantity = parseInt(document.getElementById('quantity-input').value);
     const item = {
         id: Date.now(),
-        name: document.getElementById('modal-title').textContent,
+        item: document.getElementById('modal-title').textContent,
         price: parseFloat(document.getElementById('modal-price').textContent.replace('P', '')),
         image: document.getElementById('modal-img').src,
         quantity: quantity || 1
