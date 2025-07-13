@@ -6,7 +6,6 @@ $username = "root";
 $password = "";
 $database = "wworkshopdb";
 
-//to test2calendar PLEASE get around to changing the db name
 $conn = new mysqli($host, $username, $password, $database);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -16,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $inputUsername = $_POST['username'];
     $inputPassword = $_POST['password'];
 
+    // for admins
     $stmt = $conn->prepare("SELECT id, username, password FROM admin_users WHERE username = ?");
     $stmt->bind_param("s", $inputUsername);
     $stmt->execute();
@@ -32,6 +32,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         }
     }
+    $stmt->close();
+
+    // this is for users
+    $stmt = $conn->prepare("SELECT id, username, password FROM reg_users WHERE username = ?");
+    $stmt->bind_param("s", $inputUsername);
+    $stmt->execute();
+    $stmt->store_result();
+
+    if ($stmt->num_rows === 1) {
+        $stmt->bind_result($id, $username, $hashedPassword);
+        $stmt->fetch();
+
+        if (password_verify($inputPassword, $hashedPassword)) {
+            $_SESSION['user_logged_in'] = true;
+            $_SESSION['user_username'] = $username;
+            header("Location: user_dashboard.php");
+            exit();
+        }
+    }
+    $stmt->close();
+
+    // If neither, redirect back with error
     header("Location: admin_login.html?error=1");
     exit();
 }

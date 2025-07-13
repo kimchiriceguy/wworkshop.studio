@@ -696,3 +696,56 @@ html {
     opacity: 0;
     animation: fadeIn 1s ease-in forwards;
 }
+
+/* Social Media & Login Bar (top right corner) */
+.topright-bar {
+    position: fixed;
+    top: 80px;
+    /* was 20px, now sits below the top bar */
+    right: 30px;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(19, 19, 19, 0.85);
+    padding: 8px 18px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+}
+
+.topright-bar a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.topright-bar img {
+    width: 32px;
+    height: 32px;
+    transition: filter 0.2s;
+    filter: invert(1) grayscale(0.2) brightness(0.95);
+}
+
+.topright-bar img:hover {
+    filter: invert(1) grayscale(0) brightness(1.2) drop-shadow(0 0 6px #8400ff88);
+}
+
+.topright-bar #login-status a {
+    color: #fff;
+    background: #8400ff;
+    padding: 8px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    font-family: "Inconsolata", monospace;
+    font-size: 1rem;
+    margin-left: 8px;
+    transition: background 0.2s, color 0.2s;
+    box-shadow: 0 1px 6px #8400ff33;
+}
+
+.topright-bar #login-status a:hover {
+    background: #fff;
+    color: #8400ff;
+    border: 1px solid #8400ff;
+}

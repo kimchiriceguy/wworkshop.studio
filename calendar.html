@@ -9,9 +9,49 @@
 </head>
 
 <body>
+  <div id="calendar-fade-overlay" style="
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.7);
+    z-index: 99999;
+    pointer-events: auto;
+    transition: opacity 0.6s;
+    opacity: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  ">
+    <span style="color: #fff; font-size: 2rem; font-family: Inconsolata, monospace;">Set appointments!</span>
+  </div>
+  <script>
+    // Fade out the overlay after 1.5 seconds
+    window.addEventListener('DOMContentLoaded', function () {
+      setTimeout(function () {
+        var overlay = document.getElementById('calendar-fade-overlay');
+        overlay.style.opacity = '0';
+        setTimeout(function () {
+          overlay.style.display = 'none';
+        }, 700); // Wait for the fade transition to finish
+      }, 700);
+    });
+  </script>
+
   <div class="logo-container">
     <img src="./assets/logos/wworkshopstudio_5@2x copy.png" alt="Workshop Studio Logo" class="logo">
   </div>
+
+  <div class="topright-bar">
+    <a href="https://www.facebook.com/wworkshop.studio" target="_blank" title="Facebook">
+      <img src="./assets/logos/facebook-circle.svg" alt="Facebook">
+    </a>
+    <a href="https://www.instagram.com/wworkshop.studio/" target="_blank" title="Instagram">
+      <img src="./assets/logos/instagram-svgrepo-com.svg" alt="Instagram">
+    </a>
+    <span id="login-status">
+      <a href="admin_login.html">Login</a>
+    </span>
+  </div>
+
 
   <div class="wrapper">
     <div class="marquee-text">
