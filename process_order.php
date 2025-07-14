@@ -35,15 +35,16 @@ if (!$stmt) {
     die(json_encode(["success" => false, "message" => "Prepare failed: " . $conn->error]));
 }
 
+//REMEMBER THE FORMAT IS "ITEM, QUANT, PRICE" ALWAYS ITEM ALWAYS ITEM ITEM ITEM
 foreach ($cart as $item) {
     if (
-        !isset($item['name']) ||
+        !isset($item['item']) ||
         !isset($item['quantity']) ||
         !isset($item['price'])
     ) {
         die(json_encode(["success" => false, "message" => "Cart item missing fields."]));
     }
-    $stmt->bind_param("sid", $item['name'], $item['quantity'], $item['price']);
+    $stmt->bind_param("sid", $item['item'], $item['quantity'], $item['price']);
     if (!$stmt->execute()) {
         die(json_encode(["success" => false, "message" => "Insert failed: " . $stmt->error]));
     }
