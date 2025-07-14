@@ -1,4 +1,8 @@
 <?php
+
+session_start();
+$_SESSION['user_id'] = 1;
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -15,7 +19,10 @@ $conn = new mysqli($host, $username, $password, $database);
 if ($conn->connect_error) {
     die(json_encode(["success" => false, "message" => "Connection failed: " . $conn->connect_error]));
 }
-
+if(!isset($_SESSION['user_id'])){
+    die(json_encode(["success" =>false, "message" => "User not logged in."]));
+}
+$user_id = $_SESSION['user_id'];
 // Accept JSON input
 $data = json_decode(file_get_contents('php://input'), true);
 
@@ -28,30 +35,37 @@ if (
 }
 
 $cart = $data['cart'];
+$conn->begin_transaction();
 
-$sql = "INSERT INTO purchases (item, quantity, price) VALUES (?, ?, ?)";
-$stmt = $conn->prepare($sql);
-if (!$stmt) {
-    die(json_encode(["success" => false, "message" => "Prepare failed: " . $conn->error]));
-}
+try{
+    $order_sql = "INSERT INTO orders(user_id) VALUES(?)";
+    $order_stmt = $conn->prepare($order_sql);
+    $order_stmt->bind_param("i", $user_id);
+    $order_stmt->execute();
+    $order_id = $conn->insert_id;
 
-//REMEMBER THE FORMAT IS "ITEM, QUANT, PRICE" ALWAYS ITEM ALWAYS ITEM ITEM ITEM
+    $item_sql = "INSERT INTO purchases (order_id, user_id, item, quantity, price) VALUES (?, ?, ?, ?, ?)";
+    $item_stmt = $conn->prepare($item_sql);
+
+
 foreach ($cart as $item) {
     if (
-        !isset($item['item']) ||
-        !isset($item['quantity']) ||
-        !isset($item['price'])
-    ) {
-        die(json_encode(["success" => false, "message" => "Cart item missing fields."]));
-    }
-    $stmt->bind_param("sid", $item['item'], $item['quantity'], $item['price']);
-    if (!$stmt->execute()) {
-        die(json_encode(["success" => false, "message" => "Insert failed: " . $stmt->error]));
-    }
+        !isset($item['item']) || !isset($item['quantity']) || !isset($item['price'])){
+            throw new Exception("Cart item missing fields.");
+        }
+    $item_stmt->bind_param("iisid",$order_id, $user_id, $item['item'], $item['quantity'], $item['price']);
+    $item_stmt->execute();
 }
 
-echo json_encode(["success" => true, "message" => "Order saved!"]);
+    $conn->commit();
+    echo json_encode(["success" => true, "message" => "Order saved!"]);
 
-$stmt->close();
+} 
+catch(Exception $e){
+    // $conn->rollback();
+    // echo json_encode(["success" => false, "message" => "Order failed!: ". e->getMessage()]);
+    echo "Caught exception: " . $e->getMessage();
+}
+
 $conn->close();
 ?>

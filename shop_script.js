@@ -104,9 +104,9 @@ cartModal.addEventListener('click', (e) => {
 //CART modal popup thingamajig
 document.querySelector('.add-to-cart').addEventListener('click', () => {
     const quantity = parseInt(document.getElementById('quantity-input').value);
-    const item = {
+    const name = {
         id: Date.now(),
-        item: document.getElementById('modal-title').textContent,
+        name: document.getElementById('modal-title').textContent,
         price: parseFloat(document.getElementById('modal-price').textContent.replace('P', '')),
         image: document.getElementById('modal-img').src,
         quantity: quantity || 1
