@@ -52,6 +52,16 @@ if (isset($_GET['delete_purchase'])) {
     header("Location: admin_dashboard.php");
     exit();
 }
+
+// Manage barber availability
+if (isset($_POST['update_availability'])) {
+    $barberId = $_POST['barber_id'];
+    $availability = json_encode($_POST['availability']);
+    
+    $stmt = $conn->prepare("UPDATE barbers SET availability = ? WHERE id = ?");
+    $stmt->bind_param("si", $availability, $barberId);
+    $stmt->execute();
+}
 ?>
 
 <!DOCTYPE html>
@@ -225,6 +235,26 @@ if (isset($_GET['delete_purchase'])) {
         .action-buttons a:hover {
             background-color: var(--success-color);
         }
+
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .time-slot {
+            background-color: var(--primary-color);
+            padding: 10px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .time-slot.selected {
+            background-color: var(--success-color);
+        }
     </style>
 </head>
 <body>
@@ -243,6 +273,7 @@ if (isset($_GET['delete_purchase'])) {
         <div class="tabs">
             <button class="tab-button active" onclick="switchTab('appointments')">appointments</button>
             <button class="tab-button" onclick="switchTab('purchases')">purchases</button>
+            <button class="tab-button" onclick="switchTab('schedule-management')">manage schedules</button>
         </div>
 
         <!-- Appointments Tab -->
@@ -358,6 +389,27 @@ if (isset($_GET['delete_purchase'])) {
                 </table>
             </div>
         </div>
+
+        <!-- Manage Schedules Tab -->
+        <div class="tab-content" id="schedule-management">
+            <h2>Manage Schedules</h2>
+            <form method="POST" class="availability-form">
+                <select name="barber_id" required>
+                    <?php
+                    $barbers = $conn->query("SELECT id, name FROM barbers");
+                    while ($barber = $barbers->fetch_assoc()) {
+                        echo "<option value='{$barber['id']}'>{$barber['name']}</option>";
+                    }
+                    ?>
+                </select>
+                
+                <div class="schedule-grid">
+                    <!-- Add time slot checkboxes -->
+                </div>
+                
+                <button type="submit" name="update_availability">Update Availability</button>
+            </form>
+        </div>
     </div>
 
     <script>
@@ -373,6 +425,13 @@ if (isset($_GET['delete_purchase'])) {
             document.getElementById(tabId).classList.add('active');
             document.querySelector(`button[onclick="switchTab('${tabId}')"]`).classList.add('active');
         }
+
+        // Handle time slot selection for barber availability
+        document.querySelectorAll('.time-slot').forEach(slot => {
+            slot.addEventListener('click', function() {
+                this.classList.toggle('selected');
+            });
+        });
     </script>
 </body>
 </html>

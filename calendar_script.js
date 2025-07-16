@@ -1,14 +1,16 @@
 // Barber data
 const barbers = [
-    { name: "John Doe", portfolio: ["Cut 1", "Cut 2", "Cut 3"] },
-    { name: "Jane Smith", portfolio: ["Style A", "Style B", "Style C"] },
-    { name: "Max Blade", portfolio: ["Fade X", "Buzz Y", "Trim Z"] }
+    { id: 1, name: "Martin", portfolio: ["Haircut", "Beard Trim", "Shave"] },
+    { id: 2, name: "Dorothy", portfolio: ["Haircut", "Beard Trim", "Shave"] },
+    { id: 3, name: "Asterio", portfolio: ["Haircut", "Beard Trim", "Shave"] },
+    { id: 4, name: "Gylliane", portfolio: ["Haircut", "Beard Trim", "Shave"] }
 ];
 
 // Global state
 let selectedBarber = null;
 let selectedDate = null;
 let selectedTime = null;
+let selectedService = null;
 let currentMonth = new Date().getMonth();
 let currentYear = new Date().getFullYear();
 
@@ -23,358 +25,675 @@ const timeDisplay = document.getElementById('selected-time-display');
 const confirmBtn = document.getElementById('confirm-booking');
 const barberList = document.querySelector('.barber-list');
 
+// Utility functions
 function showError(message) {
     const errorModal = document.getElementById('error-modal');
     const errorMessage = document.getElementById('error-message');
-    errorMessage.textContent = message;
-    errorModal.classList.add('show');
+    if (errorModal && errorMessage) {
+        errorMessage.textContent = message;
+        errorModal.classList.add('show');
+    } else {
+        alert(message); // Fallback if modal doesn't exist
+    }
 }
 
-// Update the calendar generation function
-function generateCalendar() {
+function showSuccess(message) {
+    const successModal = document.getElementById('success-modal');
+    if (successModal) {
+        // Find or create success message element
+        let successMessage = document.getElementById('success-message');
+        if (!successMessage) {
+            successMessage = successModal.querySelector('p');
+        }
+        if (successMessage) {
+            successMessage.textContent = message;
+        }
+        successModal.classList.add('show');
+    } else {
+        alert(message); // Fallback if modal doesn't exist
+    }
+}
+
+function formatTime(timeStr) {
+    try {
+        const [hours, minutes] = timeStr.split(':');
+        const date = new Date();
+        date.setHours(parseInt(hours), parseInt(minutes));
+
+        return date.toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+        });
+    } catch (error) {
+        console.error('Error formatting time:', error);
+        return timeStr;
+    }
+}
+
+function formatDate(dateStr) {
+    try {
+        const date = new Date(dateStr + 'T00:00:00');
+        return date.toLocaleDateString('en-US', {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric'
+        });
+    } catch (error) {
+        console.error('Error formatting date:', error);
+        return dateStr;
+    }
+}
+
+// Generate consistent time slots (matching get_day_schedule.php)
+function generateTimeSlots() {
+    const slots = [];
+    const startTime = new Date();
+    startTime.setHours(11, 0, 0, 0); // 11:00 AM
+    const endTime = new Date();
+    endTime.setHours(20, 0, 0, 0); // 8:00 PM
+
+    let currentTime = new Date(startTime);
+    while (currentTime < endTime) {
+        const timeString = currentTime.toTimeString().slice(0, 5); // HH:MM format
+        slots.push(timeString);
+        currentTime.setTime(currentTime.getTime() + 35 * 60 * 1000); // Add 35 minutes
+    }
+    return slots;
+}
+
+// Calendar generation function
+async function generateCalendar() {
+    if (!calendar) return;
+
     const firstDay = new Date(currentYear, currentMonth, 1).getDay();
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
     const tbody = calendar.getElementsByTagName("tbody")[0];
 
-    // Clear existing calendar
-    tbody.innerHTML = "";
+    if (tbody) {
+        tbody.innerHTML = "";
+    }
 
-    // Update month/year display
     const monthNames = ["January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ];
-    currentMonthDisplay.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+        "July", "August", "September", "October", "November", "December"];
+    if (currentMonthDisplay) {
+        currentMonthDisplay.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+    }
 
-    // Generate calendar grid
+    let monthlyAppointments = [];
+    if (selectedBarber) {
+        monthlyAppointments = await fetchMonthlyAppointments(selectedBarber.id, currentYear, currentMonth);
+    }
+
     let date = 1;
     for (let i = 0; i < 6; i++) {
         const row = document.createElement("tr");
-
         for (let j = 0; j < 7; j++) {
-            const cell = document.createElement("td");
-
             if (i === 0 && j < firstDay) {
-                cell.textContent = "";
-                cell.className = "empty-day";
-            } else if (date > daysInMonth) {
-                cell.textContent = "";
-                cell.className = "empty-day";
-            } else {
-                const currentDate = new Date(currentYear, currentMonth, date);
-                cell.textContent = date;
-                cell.className = "calendar-day";
-                cell.dataset.date = currentDate.toLocaleDateString('en-CA'); // YYYY-MM-DD format, local time
+                row.appendChild(document.createElement("td"));
+                continue;
+            }
 
+            if (date > daysInMonth) break;
 
-                // Highlight current day
-                const today = new Date();
-                if (date === today.getDate() &&
-                    currentMonth === today.getMonth() &&
-                    currentYear === today.getFullYear()) {
-                    cell.classList.add("current-day");
-                }
+            const currentDate = new Date(currentYear, currentMonth, date);
+            const dateStr = currentDate.toISOString().slice(0, 10);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const isPast = currentDate < today;
+            const isToday =
+                currentDate.getDate() === today.getDate() &&
+                currentDate.getMonth() === today.getMonth() &&
+                currentDate.getFullYear() === today.getFullYear();
 
-                // Add click handler for date selection
-                cell.addEventListener("click", function () {
+            const cell = document.createElement("td");
+            cell.className = "calendar-day";
+            cell.innerHTML = `
+                <div class="date-container">
+                    <span class="date-number">${date}</span>
+                    ${!isPast ? `
+                        <div class="booking-info">
+                            <button class="show-bookings-btn" data-date="${dateStr}">
+                                <span class="booking-count"></span>
+                                <span class="dropdown-arrow">▼</span>
+                            </button>
+                            <div class="bookings-dropdown" id="dropdown-${dateStr}">
+                                <div class="loading">Loading...</div>
+                            </div>
+                        </div>` : ''}
+                </div>`;
+
+            if (!isPast) {
+                const btn = cell.querySelector('.show-bookings-btn');
+                btn?.addEventListener('click', async (e) => {
+                    e.stopPropagation();
+                    await showBookingsForDate(dateStr);
+                });
+            }
+
+            if (isPast) cell.classList.add("past-date");
+            if (monthlyAppointments.some(app => app.date === dateStr)) cell.classList.add("has-appointments");
+            if (isToday) cell.classList.add("current-day");
+
+            if (!isPast) {
+                cell.addEventListener("click", async function () {
                     if (!selectedBarber) {
                         showError("Please choose a barber first");
                         return;
                     }
 
-                    // Remove selected class from all dates
                     document.querySelectorAll('.calendar-day').forEach(day => {
                         day.classList.remove('selected-date');
                     });
-
-                    // Add selected class to clicked date
                     this.classList.add('selected-date');
 
-                    // Get the selected date from data attribute
-                    const clickedDate = new Date(this.dataset.date);
-                    selectedDate = clickedDate;
+                    selectedDate = dateStr;
+                    const formattedDate = formatDate(dateStr);
+                    const dateDisplay = document.getElementById('selected-date-display');
+                    if (dateDisplay) dateDisplay.textContent = formattedDate;
 
-                    // Format date as "Month Day, Year"
-                    const formattedDate = clickedDate.toLocaleDateString('en-US', {
-                        month: 'long',
-                        day: 'numeric',
-                        year: 'numeric'
-                    });
-
-                    // Update the display
-                    document.getElementById('selected-date-display').textContent = formattedDate;
-
-                    // Example: when a date is selected
-                    document.getElementById('date-input').value = selectedDate;
-
-                    // Reset time selection
-                    document.getElementById('selected-time-display').textContent = 'Not selected';
                     selectedTime = null;
-                    document.querySelectorAll('.time-slot').forEach(slot => {
-                        slot.classList.remove('selected');
-                    });
+                    const timeDisplayEl = document.getElementById('selected-time-display');
+                    if (timeDisplayEl) timeDisplayEl.textContent = 'Not selected';
+                    if (timeInput) timeInput.value = '';
 
-                    // Reset time input
-                    timeInput.value = '';
-                    timeDisplay.textContent = 'Not selected';
-                    validateBooking(); // Validate booking fields
+                    const availableSlots = await fetchBarberAvailability(selectedBarber.id, dateStr);
+                    updateTimeDropdown(availableSlots);
+                    await showDaySchedule(selectedBarber.id, dateStr);
+                    validateBooking();
                 });
-
-                date++;
             }
             row.appendChild(cell);
+            date++;
         }
         tbody.appendChild(row);
-        if (date > daysInMonth) break;
+    }
+
+    // Enable click-outside-to-close for schedule modal
+    const scheduleModal = document.getElementById('schedule-modal');
+    if (scheduleModal) {
+        scheduleModal.addEventListener('click', (e) => {
+            if (e.target.id === 'schedule-modal') {
+                scheduleModal.classList.remove('show');
+            }
+        });
     }
 }
 
-function generateBarberList() {
-    barbers.forEach((barber) => {
-        const card = document.createElement("div");
-        card.className = "barber-card";
-        card.innerHTML = `
-            <div class="barber-name">${barber.name}</div>
-            <button class="view-portfolio-btn">View Portfolio</button>
-        `;
 
-        card.addEventListener("click", () => {
-            selectedBarber = barber;
-            document.querySelectorAll(".barber-card")
-                .forEach(c => c.classList.remove("selected"));
-            card.classList.add("selected");
-            generateCalendar(); // Refresh calendar for new barber
-
-            // Example: when a barber is selected
-            document.getElementById('barber-input').value = selectedBarber.name;
+// Fetch functions
+async function fetchMonthlyAppointments(barberId, year, month) {
+    try {
+        const response = await fetch('get_monthly_appointments.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                barber_id: barberId,
+                year: year,
+                month: month + 1
+            })
         });
 
-        barberList.appendChild(card);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Monthly appointments received:", data);
+        return data.appointments || [];
+    } catch (error) {
+        console.error('Error fetching monthly appointments:', error);
+        return [];
+    }
+}
+
+async function fetchBarberAvailability(barberId, date) {
+    try {
+        const response = await fetch('get_availability.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                barber_id: barberId,
+                date: date
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Availability data received:", data);
+        return data.bookedSlots || []; // Return booked slots to filter out
+    } catch (error) {
+        console.error('Error fetching availability:', error);
+        return [];
+    }
+}
+
+async function showDaySchedule(barberId, date) {
+    try {
+        const response = await fetch('get_day_schedule.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                barber_id: barberId,
+                date: date
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Update the day schedule display
+        const scheduleContainer = document.getElementById('day-schedule');
+        if (scheduleContainer && data.schedule) {
+            scheduleContainer.innerHTML = '';
+
+            if (data.schedule.length > 0) {
+                const scheduleTitle = document.createElement('h4');
+                scheduleTitle.textContent = `Schedule for ${formatDate(date)}`;
+                scheduleContainer.appendChild(scheduleTitle);
+
+                data.schedule.forEach(slot => {
+                    const slotDiv = document.createElement('div');
+                    slotDiv.className = `schedule-slot ${slot.status}`;
+                    slotDiv.innerHTML = `
+                        <span class="time">${formatTime(slot.time)}</span>
+                        <span class="status">${slot.status === 'booked' ? 'Booked' : 'Available'}</span>
+                    `;
+                    scheduleContainer.appendChild(slotDiv);
+                });
+            } else {
+                scheduleContainer.innerHTML = '<p>No schedule available for this date.</p>';
+            }
+        }
+    } catch (error) {
+        console.error('Error fetching day schedule:', error);
+    }
+}
+
+// Barber selection - Fixed to use the barber modal properly
+function setupBarberSelection() {
+    const barberItems = document.querySelectorAll('.barber-item');
+    const barberModal = document.getElementById('barber-modal');
+    const modalBackdrop = document.getElementById('modal-backdrop');
+
+    barberItems.forEach(item => {
+        const button = item.querySelector('.view-portfolio-btn');
+        if (button) {
+            button.addEventListener('click', async function () {
+                const barberName = item.dataset.barber;
+                const barber = barbers.find(b => b.name === barberName);
+
+                if (barber) {
+                    selectedBarber = barber;
+                    selectedService = null; // Reset service selection
+
+                    // Update barber display
+                    const barberDisplay = document.getElementById('selected-barber-display');
+                    if (barberDisplay) {
+                        barberDisplay.textContent = selectedBarber.name;
+                    }
+
+                    // Generate service options
+                    generateServiceOptions();
+
+                    // Regenerate calendar with appointments
+                    await generateCalendar();
+
+                    // Clear previous selections
+                    resetSelections();
+
+                    // Close modal
+                    barberModal.classList.remove('show');
+                    if (modalBackdrop) modalBackdrop.style.display = 'none';
+
+                    validateBooking();
+                }
+            });
+        }
     });
 }
 
-function showBookingModal(date) {
-    document.getElementById("booking-date").textContent =
-        date.toLocaleDateString();
-    document.getElementById("booking-barber").textContent =
-        selectedBarber.name;
-    bookingModal.classList.add("show");
-}
+// Service selection
+function generateServiceOptions() {
+    const serviceContainer = document.getElementById('service-options');
+    if (!serviceContainer || !selectedBarber) return;
 
-// Initialize time slots
-function initializeTimeSlots() {
-    const timeSlots = document.querySelectorAll('.time-slot');
+    serviceContainer.innerHTML = '';
 
-    timeSlots.forEach(slot => {
-        slot.addEventListener('click', function () {
-            if (!selectedDate) {
-                showError("Please select a date first");
-                return;
-            }
+    selectedBarber.portfolio.forEach(service => {
+        const serviceBtn = document.createElement('button');
+        serviceBtn.className = 'service-option';
+        serviceBtn.textContent = service;
+        serviceBtn.addEventListener('click', function () {
+            selectedService = service;
 
-            // Remove selected class from all time slots
-            timeSlots.forEach(s => s.classList.remove('selected'));
-
-            // Add selected class to clicked time slot
+            // Update UI
+            document.querySelectorAll('.service-option').forEach(btn => {
+                btn.classList.remove('selected');
+            });
             this.classList.add('selected');
 
-            // Update selected time
-            selectedTime = this.dataset.time; // This should be a string like "14:30"
-
-            // Format time for display (convert 24h to 12h format)
-            const timeDisplay = new Date(`2000-01-01T${selectedTime}`).toLocaleTimeString('en-US', {
-                hour: 'numeric',
-                minute: 'numeric',
-                hour12: true
-            });
-
             // Update display
-            document.getElementById('selected-time-display').textContent = timeDisplay;
-            validateBooking(); // Validate booking fields
+            const serviceDisplay = document.getElementById('selected-service-display');
+            if (serviceDisplay) {
+                serviceDisplay.textContent = selectedService;
+            }
+
+            validateBooking();
         });
+
+        serviceContainer.appendChild(serviceBtn);
     });
-    console.log(selectedTime);
-    console.log("passed");
 }
 
-// Check if all required fields are filled
+// Update the updateTimeDropdown function
+function updateTimeDropdown(bookedSlots) {
+    if (!timeInput) return;
+
+    timeInput.innerHTML = '<option value="">Select a time</option>';
+    const timeSlots = generateTimeSlots();
+
+    timeSlots.forEach(slot => {
+        if (!bookedSlots.includes(slot)) {
+            const option = document.createElement('option');
+            option.value = slot;
+            option.textContent = formatTime(slot);
+            timeInput.appendChild(option);
+        }
+    });
+}
+
+// Validation
 function validateBooking() {
-    // Only require barber and date
-    const isValid = selectedBarber && selectedDate;
-    confirmBtn.disabled = !isValid;
+    const isValid = selectedBarber && selectedDate && selectedTime && selectedService;
+    if (confirmBtn) {
+        confirmBtn.disabled = !isValid;
+    }
     return isValid;
 }
 
-// Event Listeners
-document.addEventListener("DOMContentLoaded", () => {
-    generateCalendar();
-    generateBarberList();
-    initializeTimeSlots();
-});
-
-prevMonthBtn.addEventListener("click", () => {
-    currentMonth--;
-    if (currentMonth < 0) {
-        currentMonth = 11;
-        currentYear--;
+// Event handlers setup
+function setupModalHandlers() {
+    // Error modal close
+    const closeErrorBtn = document.querySelector('.close-error-btn');
+    if (closeErrorBtn) {
+        closeErrorBtn.addEventListener('click', function () {
+            const errorModal = document.getElementById('error-modal');
+            if (errorModal) {
+                errorModal.classList.remove('show');
+            }
+        });
     }
-    generateCalendar();
-});
 
-nextMonthBtn.addEventListener("click", () => {
-    currentMonth++;
-    if (currentMonth > 11) {
-        currentMonth = 0;
-        currentYear++;
+    // Success modal close
+    const closeSuccessBtn = document.querySelector('.close-success-btn');
+    if (closeSuccessBtn) {
+        closeSuccessBtn.addEventListener('click', function () {
+            const successModal = document.getElementById('success-modal');
+            if (successModal) {
+                successModal.classList.remove('show');
+            }
+        });
     }
-    generateCalendar();
-});
 
-// Modal controls
-document.getElementById("close-booking-modal")
-    .addEventListener("click", () => {
-        bookingModal.classList.remove("show");
-    });
-
-document.getElementById("booking-form")
-    .addEventListener("submit", (e) => {
-        e.preventDefault();
-        // Add your booking submission logic here
-        bookingModal.classList.remove("show");
-        alert("Booking confirmed!");
-    });
-
-document.addEventListener('DOMContentLoaded', function () {
+    // Barber modal handlers
     const openBarberBtn = document.getElementById('open-barber-modal');
     const barberModal = document.getElementById('barber-modal');
     const closeBarberBtn = document.getElementById('close-barber-modal');
     const modalBackdrop = document.getElementById('modal-backdrop');
 
-    // Open barber modal
-    openBarberBtn.addEventListener('click', function () {
-        barberModal.classList.add('show');
-        modalBackdrop.style.display = 'block';
-    });
-
-    // Close barber modal
-    closeBarberBtn.addEventListener('click', function () {
-        barberModal.classList.remove('show');
-        modalBackdrop.style.display = 'none';
-    });
-
-    // Handle barber selection
-    document.querySelectorAll('.view-portfolio-btn').forEach(btn => {
-        btn.addEventListener('click', function () {
-            const barberItem = this.closest('.barber-item');
-            const barberName = barberItem.querySelector('strong').textContent;
-
-            // Update the display
-            document.getElementById('selected-barber-display').textContent = barberName;
-
-            // Close the modal
-            barberModal.classList.remove('show');
-            modalBackdrop.style.display = 'none';
+    if (openBarberBtn && barberModal) {
+        openBarberBtn.addEventListener('click', function () {
+            barberModal.classList.add('show');
+            if (modalBackdrop) modalBackdrop.style.display = 'block';
         });
-    });
-});
+    }
 
-// Add error modal close handler
-document.querySelector('.close-error-btn').addEventListener('click', function () {
-    document.getElementById('error-modal').classList.remove('show');
-});
+    if (closeBarberBtn && barberModal) {
+        closeBarberBtn.addEventListener('click', function () {
+            barberModal.classList.remove('show');
+            if (modalBackdrop) modalBackdrop.style.display = 'none';
+        });
+    }
 
-// Update the barber selection handler
-function selectBarber(barber) {
-    selectedBarber = barber;
-    document.getElementById('selected-barber-display').textContent = barber.name;
-
-    // Close the barber modal
-    document.getElementById('barber-modal').classList.remove('show');
-    document.getElementById('modal-backdrop').style.display = 'none';
-
-    // Regenerate calendar to enable date selection
-    generateCalendar();
-    validateBooking(); // Validate booking fields
+    // Close modal when clicking backdrop
+    if (modalBackdrop) {
+        modalBackdrop.addEventListener('click', function () {
+            if (barberModal) {
+                barberModal.classList.remove('show');
+            }
+            this.style.display = 'none';
+        });
+    }
 }
 
-document.querySelectorAll('.view-portfolio-btn').forEach(btn => {
-    btn.addEventListener('click', function () {
-        const barberItem = this.closest('.barber-item');
-        const barberName = barberItem.querySelector('strong').textContent;
+function setupTimeInputHandler() {
+    if (timeInput) {
+        timeInput.addEventListener('change', function () {
+            if (!selectedDate) {
+                showError("Please select a date first");
+                this.value = '';
+                return;
+            }
 
-        selectBarber({
-            name: barberName,
-            // Add other barber details as needed
+            selectedTime = this.value;
+
+            // Update display
+            const timeDisplay = document.getElementById('selected-time-display');
+            if (timeDisplay) {
+                if (selectedTime) {
+                    timeDisplay.textContent = formatTime(selectedTime);
+                } else {
+                    timeDisplay.textContent = 'Not selected';
+                }
+            }
+
+            validateBooking();
         });
+    }
+}
+
+function setupConfirmBookingHandler() {
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', async function () {
+            if (!validateBooking()) {
+                showError("Please fill in all required fields");
+                return;
+            }
+
+            // Disable button to prevent double-clicking
+            this.disabled = true;
+            this.textContent = 'Booking...';
+
+            try {
+                const bookingData = {
+                    barber_id: selectedBarber.id,
+                    date: selectedDate,
+                    time: selectedTime,
+                    service: selectedService
+                    // Remove user_id - let backend handle guest users
+                };
+
+                console.log('Sending booking data:', bookingData);
+
+                const response = await fetch('calendar_backend.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(bookingData)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showSuccess("Booking confirmed successfully!");
+
+                    // Refresh calendar to show new booking
+                    await generateCalendar();
+
+                    // Reset selections
+                    resetSelections();
+                } else {
+                    showError(result.message || "Booking failed. Please try again.");
+                }
+            } catch (error) {
+                console.error('Booking error:', error);
+                showError("An error occurred while booking. Please try again.");
+            } finally {
+                // Re-enable button
+                this.disabled = false;
+                this.textContent = 'Confirm Booking';
+                validateBooking();
+            }
+        });
+    }
+}
+
+// Helper function to reset selections
+function resetSelections() {
+    selectedDate = null;
+    selectedTime = null;
+    selectedService = null;
+
+    // Reset displays
+    const dateDisplay = document.getElementById('selected-date-display');
+    if (dateDisplay) dateDisplay.textContent = 'Not selected';
+
+    const timeDisplay = document.getElementById('selected-time-display');
+    if (timeDisplay) timeDisplay.textContent = 'Not selected';
+
+    const serviceDisplay = document.getElementById('selected-service-display');
+    if (serviceDisplay) serviceDisplay.textContent = 'Not selected';
+
+    // Clear form inputs
+    if (timeInput) timeInput.value = '';
+
+    // Remove selected styling
+    document.querySelectorAll('.calendar-day').forEach(day => {
+        day.classList.remove('selected-date');
     });
-});
 
-timeInput.addEventListener('change', function () {
-    if (!selectedDate) {
-        showError("Please select a date first");
-        this.value = '';
-        document.getElementById('selected-time-display').textContent = 'Not selected';
-        selectedTime = null;
-        return;
-    }
+    document.querySelectorAll('.service-option').forEach(btn => {
+        btn.classList.remove('selected');
+    });
 
-    selectedTime = this.value; // "14:30" string
+    // Clear day schedule
+    const scheduleContainer = document.getElementById('day-schedule');
+    if (scheduleContainer) scheduleContainer.innerHTML = '';
 
-    // Format and display the selected time
-    if (selectedTime) {
-        const formatted = new Date(`2000-01-01T${selectedTime}`).toLocaleTimeString('en-US', {
-            hour: 'numeric',
-            minute: 'numeric',
-            hour12: true
-        });
-        document.getElementById('selected-time-display').textContent = formatted;
-    } else {
-        document.getElementById('selected-time-display').textContent = 'Not selected';
-    }
     validateBooking();
+}
+
+// Navigation handlers
+function setupNavigationHandlers() {
+    if (prevMonthBtn) {
+        prevMonthBtn.addEventListener("click", async () => {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            await generateCalendar();
+        });
+    }
+
+    if (nextMonthBtn) {
+        nextMonthBtn.addEventListener("click", async () => {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            await generateCalendar();
+        });
+    }
+}
+
+// Initialize the application
+document.addEventListener("DOMContentLoaded", async function () {
+    try {
+        await generateCalendar();
+        setupBarberSelection();
+        setupModalHandlers();
+        setupTimeInputHandler();
+        setupConfirmBookingHandler();
+        setupNavigationHandlers();
+
+        console.log("Calendar system initialized successfully");
+    } catch (error) {
+        console.error("Error initializing calendar system:", error);
+        showError("Failed to initialize calendar system. Please refresh the page.");
+    }
 });
 
-confirmBtn.addEventListener('click', async function () {
-    if (!validateBooking()) {
-        showError("Please fill in all required fields");
-        return;
+// show bookings for a specific date as a modal
+async function showBookingsForDate(date) {
+    const modal = document.getElementById('schedule-modal');
+    const modalContent = modal.querySelector('.schedule-modal-content');
+
+    try {
+        const response = await fetch('get_day_bookings.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ date })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            let html = `
+                <button class="modal-close" onclick="document.getElementById('schedule-modal').classList.remove('show')">&times;</button>
+                <h2>Schedule for ${formatDate(date)}</h2>
+                <div class="bookings-summary">
+            `;
+
+            data.bookings.forEach(barber => {
+                html += `
+                    <div class="barber-summary">
+                        <h4>${barber.name}</h4>
+                        <p>Booked: ${barber.booked_slots.length} slots</p>
+                        <p>Available: ${barber.available_slots.length} slots</p>
+                        <div class="time-slots">
+                            ${barber.booked_slots.map(slot => `
+                                <span class="time-slot booked">${formatTime(slot)}</span>
+                            `).join('')}
+                            ${barber.available_slots.map(slot => `
+                                <span class="time-slot available">${formatTime(slot)}</span>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            modalContent.innerHTML = html;
+            modal.classList.add('show');
+        } else {
+            modalContent.innerHTML = '<p class="error">Failed to load bookings</p>';
+            modal.classList.add('show');
+        }
+    } catch (error) {
+        console.error('Error fetching bookings:', error);
+        modalContent.innerHTML = '<p class="error">An error occurred while loading bookings</p>';
+        modal.classList.add('show');
     }
-
-    // Ensure date and time are strings
-    let dateString = selectedDate;
-    if (selectedDate instanceof Date) {
-        dateString = selectedDate.toISOString().slice(0, 10);
-    }
-
-    let timeString = selectedTime;
-    if (selectedTime instanceof Date) {
-        timeString = selectedTime.toTimeString().slice(0, 5);
-    }
-
-    const bookingData = {
-        barber: selectedBarber.name,
-        date: dateString, // "YYYY-MM-DD"
-        time: timeString  // "HH:MM"
-    };
-
-    console.log("Booking data to send:", bookingData);
-
-    const response = await fetch('connect.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(bookingData)
-    });
-
-    const result = await response.json();
-
-    if (result.success) {
-        document.getElementById('success-modal').classList.add('show');
-    } else {
-        showError(result.message || "Booking failed.");
-    }
-});
-
-document.querySelector('.close-success-btn').addEventListener('click', function () {
-    document.getElementById('success-modal').classList.remove('show');
-});
+}

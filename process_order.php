@@ -1,7 +1,6 @@
 <?php
 session_start();
-$_SESSION['user_id'] = 1; // 🔧 TEMP: Simulate a logged-in user (remove when login is set up)
-
+$_SESSION['user_id'] = 1; //i think martin meant this to be tied to a user based on some session stuff this 1 is just a temp
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -40,14 +39,14 @@ $cart = $data['cart'];
 $conn->begin_transaction();
 
 try {
-    // Step 1: Create new order
+    //new order
     $order_sql = "INSERT INTO orders(user_id) VALUES(?)";
     $order_stmt = $conn->prepare($order_sql);
     $order_stmt->bind_param("i", $user_id);
     $order_stmt->execute();
     $order_id = $conn->insert_id;
 
-    // Step 2: Prepare insert for each item
+    //insert order
     $item_sql = "INSERT INTO purchases (order_id, user_id, product_id, item, quantity, price)
                  VALUES (?, ?, ?, ?, ?, ?)";
     $item_stmt = $conn->prepare($item_sql);

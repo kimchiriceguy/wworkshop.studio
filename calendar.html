@@ -135,10 +135,16 @@
             <!-- <label>Selected Time:</label>
             <input type="time" id="time" name="time" required /> -->
             <div class="time-input-wrapper">
-              <input type="time" id="time-input" class="time-input" min="11:00" max="20:00" step="3600"
-                pattern="[0-9]{2}:[0-9]{2}" required>
+              <select id="time-input">
+                <!-- all of this is js -->
+              </select>
               <span id="selected-time-display">Not selected</span>
             </div>
+          </div>
+          <div class="info-item">
+            <label>Selected Service:</label>
+            <span id="selected-service-display">Not selected</span>
+            <div id="service-options" style="margin-top: 0.5rem; display: flex; gap: 0.5rem;"></div>
           </div>
           <div class="info-item">
             <button id="confirm-booking" class="confirm-booking-btn" disabled>
@@ -251,6 +257,17 @@
       <h2>Notice</h2>
       <p id="error-message"></p>
       <button class="close-error-btn">OK</button>
+    </div>
+  </div>
+  <!-- make a new modal! this one is to show a new calendar? or at least a complete list of schedules based on get_availability! -->
+  <div id="schedule-modal" class="modal">
+    <div class="schedule-modal-content">
+      <button class="modal-close" id="close-schedule-modal">&times;</button>
+      <h2>Available Bookings</h2>
+      <div id="schedule-content">
+        <!-- This will be populated with bookings -->
+        <p class="loading">Loading...</p>
+      </div>
     </div>
   </div>
 
