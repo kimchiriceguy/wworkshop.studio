@@ -121,9 +121,17 @@ ALTER TABLE `orders`
 ALTER TABLE `purchases`
   ADD CONSTRAINT `fk_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
   ADD CONSTRAINT `fk_user_purchase` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
 DELETE FROM barbers WHERE id = 0;
 ALTER TABLE `barbers` AUTO_INCREMENT = 1;
 
 -- this should return all appointments that do not have a corresponding user in the users table (?)
-
+SELECT a.user_id
+FROM appointments a
+LEFT JOIN users u ON a.user_id = u.id
+WHERE u.id IS NULL;

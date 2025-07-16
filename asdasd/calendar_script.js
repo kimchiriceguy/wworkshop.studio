@@ -169,23 +169,20 @@ async function generateCalendar() {
 
                         // Reset time selection
                         selectedTime = null;
-                        if (timeDisplay) {
-                            timeDisplay.textContent = 'Not selected';
+                        const timeDisplayEl = document.getElementById('selected-time-display');
+                        if (timeDisplayEl) {
+                            timeDisplayEl.textContent = 'Not selected';
                         }
 
-                        console.log('Fetching availability for date:', dateStr); // Debug log
+                        if (timeInput) {
+                            timeInput.value = '';
+                        }
 
-                        // Fetch and update available times
+                        // Fetch and update available times using barber_id
                         const availableSlots = await fetchBarberAvailability(selectedBarber.id, dateStr);
-                        console.log('Available slots:', availableSlots); // Debug log
+                        updateTimeDropdown(availableSlots);
 
-                        if (availableSlots.length === 0) {
-                            showError("No available time slots for this date");
-                        } else {
-                            updateTimeDropdown(availableSlots);
-                        }
-
-                        // Show detailed schedule
+                        // Show detailed schedule for the day using barber_id
                         await showDaySchedule(selectedBarber.id, dateStr);
 
                         validateBooking();
@@ -233,15 +230,13 @@ async function fetchMonthlyAppointments(barberId, year, month) {
 
 async function fetchBarberAvailability(barberId, date) {
     try {
-        console.log('Fetching availability for:', { barberId, date }); // Debug log
-
         const response = await fetch('get_availability.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                barber_id: barberId,
+                barber_id: barberId, // Changed from barberId to barber_id
                 date: date
             })
         });
@@ -252,15 +247,9 @@ async function fetchBarberAvailability(barberId, date) {
 
         const data = await response.json();
         console.log("Availability data received:", data); // Debug log
-
-        if (!data.success) {
-            throw new Error(data.error || 'Failed to fetch availability');
-        }
-
         return data.availableSlots || [];
     } catch (error) {
         console.error('Error fetching availability:', error);
-        showError(`Failed to fetch available times: ${error.message}`);
         return [];
     }
 }
@@ -408,7 +397,7 @@ function generateServiceOptions() {
 }
 
 // Add this function to generate time slots in 35-minute intervals
-function generateTimeSlots() {
+function generateTimeSlots() {  
     const slots = [];
     const startHour = 11; // 11 AM
     const endHour = 20;   // 8 PM
@@ -430,24 +419,26 @@ function updateTimeDropdown(availableSlots) {
     if (!timeInput) return;
 
     timeInput.innerHTML = '<option value="">Select a time</option>';
+    const timeSlots = generateTimeSlots();
 
-    // Add available slots to dropdown
-    availableSlots.forEach(slot => {
-        const option = document.createElement('option');
-        option.value = slot;
-        option.textContent = formatTime(slot);
-        timeInput.appendChild(option);
+    timeSlots.forEach(slot => {
+        if (!availableSlots.includes(slot)) {
+            const option = document.createElement('option');
+            option.value = slot;
+            option.textContent = formatTime(slot);
+            timeInput.appendChild(option);
+        }
     });
 
     // Add event listener to handle time selection
-    timeInput.addEventListener('change', function () {
+    timeInput.addEventListener('change', function() {
         selectedTime = this.value;
         const formattedTime = selectedTime ? formatTime(selectedTime) : 'Not selected';
-
+        
         if (timeDisplay) {
             timeDisplay.textContent = formattedTime;
         }
-
+        
         validateBooking();
     });
 }
