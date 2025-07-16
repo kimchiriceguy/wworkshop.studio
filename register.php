@@ -82,6 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $pdo->prepare("INSERT INTO users (username, password, email, phone) VALUES (?, ?, ?, ?)");
             $stmt->execute([$username, $hashedPassword, $email, $formattedPhone]);
 
+            // Success - redirect to login with success message
             header("Location: admin_login.html?success=" . urlencode("Registration successful! Please login."));
             exit();
         } catch (PDOException $e) {
@@ -90,13 +91,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // If errors, redirect back
+    // If errors, redirect back with error message
     if (!empty($errors)) {
         $errorMessage = implode(", ", $errors);
         header("Location: register.html?error=" . urlencode($errorMessage));
         exit();
     }
 } else {
+    // If not POST request, redirect to registration form
     header("Location: register.html");
     exit();
 }
