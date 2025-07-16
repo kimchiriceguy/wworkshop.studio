@@ -1,0 +1,63 @@
+<?php
+session_start();
+
+$host = "localhost";
+$username = "root";
+$password = "";
+$database = "wworkshopdb";
+
+$conn = new mysqli($host, $username, $password, $database);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $inputUsername = $_POST['username'];
+    $inputPassword = $_POST['password'];
+
+    // // for admins
+    // $stmt = $conn->prepare("SELECT id, username, password FROM users WHERE username = ? AND password = ?"); 
+    // $stmt->bind_param("s", $inputUsername);
+    // $stmt->execute();
+    // $stmt->store_result();
+
+    // if ($stmt->num_rows === 1) {
+    //     $stmt->bind_result($id, $username, $password);
+    //     $stmt->fetch();
+
+    //     if (password_verify($inputPassword, $hashedPassword)) {
+    //         // $_SESSION['admin_logged_in'] = true;
+    //         $_SESSION['username'] = $username;
+    //         header("Location: admin_dashboard.php");
+    //         exit();
+    //     }
+    // }
+    // $stmt->close();
+
+    // this is for users
+    $stmt = $conn->prepare("SELECT id, username, password FROM users WHERE username = ?");
+    $stmt->bind_param("s", $inputUsername);
+    $stmt->execute();
+    $stmt->store_result();
+
+    $hashedPassword = password_hash($inputPassword, PASSWORD_DEFAULT);
+
+    if ($stmt->num_rows === 1) {
+        $stmt->bind_result($id, $username, $password);
+        $stmt->fetch();
+
+        if (password_verify($inputPassword, $hashedPassword)) {
+            // $_SESSION['user_logged_in'] = true;
+            $_SESSION['user_username'] = $username;
+            // header("Location: index.html", 200);
+            include 'index.html';  // This keeps the response as 200 OK
+            exit();
+        }
+    }
+    $stmt->close();
+
+    // If neither, redirect back with error
+    header("Location: user_login.html?error=1");
+    exit();
+}
+?>

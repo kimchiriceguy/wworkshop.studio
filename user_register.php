@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$username, $hashedPassword, $email, $formattedPhone]);
 
             // Success - redirect to login with success message
-            header("Location: admin_login.html?success=" . urlencode("Registration successful! Please login."));
+            header("Location: user_login.html?success=" . urlencode("Registration successful! Please login."));
             exit();
         } catch (PDOException $e) {
             error_log("Registration failed: " . $e->getMessage());
