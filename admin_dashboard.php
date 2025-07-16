@@ -16,6 +16,21 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Approve or Decline Orders
+if (isset($_GET['approve_order'])) {
+    $orderId = intval($_GET['approve_order']);
+    $conn->query("UPDATE orders SET status = 'approved' WHERE id = $orderId");
+    header("Location: admin_dashboard.php");
+    exit();
+}
+
+if (isset($_GET['decline_order'])) {
+    $orderId = intval($_GET['decline_order']);
+    $conn->query("UPDATE orders SET status = 'declined' WHERE id = $orderId");
+    header("Location: admin_dashboard.php");
+    exit();
+}
+
 // Create: Add Appointment
 if (isset($_POST['add_appointment'])) {
     $barber = $conn->real_escape_string($_POST['barber']);
@@ -242,7 +257,7 @@ if (isset($_GET['delete_purchase'])) {
     <div class="container">
         <div class="tabs">
             <button class="tab-button active" onclick="switchTab('appointments')">appointments</button>
-            <button class="tab-button" onclick="switchTab('purchases')">purchases</button>
+            <button class="tab-button" onclick="switchTab('purchases')">orders</button>
         </div>
 
         <!-- Appointments Tab -->
@@ -304,53 +319,79 @@ if (isset($_GET['delete_purchase'])) {
                 </table>
             </div>
         </div>
-
-        <!-- Purchases Tab -->
+        <!-- Orders Tab -->
         <div id="purchases" class="tab-content">
             <div class="crud-section">
-                <h2>add new purchase</h2>
-                <form action="admin_dashboard.php" method="POST">
-                    <div class="form-group">
-                        <label for="item">item</label>
-                        <input type="text" id="item" name="item" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="quantity">quantity</label>
-                        <input type="number" id="quantity" name="quantity" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="price">price</label>
-                        <input type="number" step="0.01" id="price" name="price" required>
-                    </div>
-                    <button type="submit" name="add_purchase" class="btn">add purchase</button>
-                </form>
-            </div>
-
-            <div class="crud-section">
-                <h2>purchases list</h2>
+                <h2>customer orders</h2>
                 <table>
                     <thead>
                         <tr>
-                            <th>id</th>
-                            <th>item</th>
-                            <th>quantity</th>
-                            <th>price</th>
-                            <th>actions</th>
+                            <th>Order ID</th>
+                            <th>User ID</th>
+                            <th>Order Date</th>
+                            <th>Proof</th>
+                            <th>Status</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                        $result = $conn->query("SELECT * FROM purchases ORDER BY id DESC");
-                        while ($row = $result->fetch_assoc()):
+                        $orders = $conn->query("SELECT * FROM orders ORDER BY order_date DESC");
+                        while ($order = $orders->fetch_assoc()):
                         ?>
                         <tr>
-                            <td><?php echo $row['id']; ?></td>
-                            <td><?php echo htmlspecialchars($row['item']); ?></td>
-                            <td><?php echo $row['quantity']; ?></td>
-                            <td>$<?php echo number_format($row['price'], 2); ?></td>
+                            <td><?php echo $order['id']; ?></td>
+                            <td><?php echo $order['user_id']; ?></td>
+                            <td><?php echo $order['order_date']; ?></td>
+                            <td>
+                                <?php if ($order['proof_image']): ?>
+                                    <a href="uploads/<?php echo htmlspecialchars($order['proof_image']); ?>" target="_blank">
+                                        <img src="uploads/<?php echo htmlspecialchars($order['proof_image']); ?>" alt="Proof" style="max-height: 60px;">
+                                    </a>
+                                <?php else: ?>
+                                    <em>No Image</em>
+                                <?php endif; ?>
+                            </td>
+                            <td><?php echo $order['status']; ?></td>
                             <td class="action-buttons">
-                                <a href="edit_purchase.php?id=<?php echo $row['id']; ?>" class="btn">edit</a>
-                                <a href="?delete_purchase=<?php echo $row['id']; ?>" class="btn" onclick="return confirm('Delete this purchase?');">delete</a>
+                                <?php if ($order['status'] === 'pending'): ?>
+                                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                                        <a href="?approve_order=<?php echo $order['id']; ?>" class="btn">Approve</a>
+                                        <a href="?decline_order=<?php echo $order['id']; ?>" class="btn" onclick="return confirm('Decline this order?');">Decline</a>
+                                        <button onclick="toggleItems('items-<?php echo $order['id']; ?>')" class="btn">View Items</button>
+                                    </div>
+                                <?php else: ?>
+                                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                                        <em><?php echo ucfirst($order['status']); ?></em>
+                                        <button onclick="toggleItems('items-<?php echo $order['id']; ?>')" class="btn">View Items</button>
+                                    </div>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                        <tr id="items-<?php echo $order['id']; ?>" style="display: none; background-color: #2a2a2a;">
+                            <td colspan="6">
+                                <table style="width: 100%; margin-top: 10px;">
+                                    <thead>
+                                        <tr>
+                                            <th>Item</th>
+                                            <th>Quantity</th>
+                                            <th>Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $order_id = $order['id'];
+                                        $items_result = $conn->query("SELECT item, quantity, price FROM purchases WHERE order_id = $order_id");
+                                        while ($item = $items_result->fetch_assoc()):
+                                        ?>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($item['item']); ?></td>
+                                            <td><?php echo $item['quantity']; ?></td>
+                                            <td>₱<?php echo number_format($item['price'], 2); ?></td>
+                                        </tr>
+                                        <?php endwhile; ?>
+                                    </tbody>
+                                </table>
                             </td>
                         </tr>
                         <?php endwhile; ?>
@@ -358,6 +399,7 @@ if (isset($_GET['delete_purchase'])) {
                 </table>
             </div>
         </div>
+
     </div>
 
     <script>
@@ -372,6 +414,15 @@ if (isset($_GET['delete_purchase'])) {
             
             document.getElementById(tabId).classList.add('active');
             document.querySelector(`button[onclick="switchTab('${tabId}')"]`).classList.add('active');
+        }
+
+        function toggleItems(id) {
+            const row = document.getElementById(id);
+            if (row.style.display === 'none') {
+                row.style.display = 'table-row';
+            } else {
+                row.style.display = 'none';
+            }
         }
     </script>
 </body>

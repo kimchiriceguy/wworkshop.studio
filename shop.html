@@ -227,10 +227,23 @@
             <span id="cart-close" class="modal-close">&times;</span>
             <h2>Shopping Cart</h2>
             <div id="cart-items"></div>
-            <div class="cart-total">
-                <p>Total: <span id="cart-total-amount">P0</span></p>
-                <button id="buy-now-btn" class="buy-now-button">Buy Now</button>
-            </div>
+        <form id="order-form" enctype="multipart/form-data">
+        <div class="cart-total" style="text-align: center;">
+        <p>Total: <span id="cart-total-amount">P0</span></p>
+
+        <div class="qr-section" style="margin: 1rem 0; text-align: center;">
+            <p><strong>Scan this QR Code to pay:</strong></p>
+            <img src="assets/qr/sample_qr.jpg" alt="Payment QR Code"
+                 style="max-width: 200px; border: 1px solid #ccc; border-radius: 6px;">
+        </div>
+
+        <label for="proof-upload" style="display: block; margin-top: 1rem;">Upload Proof of Payment:</label>
+        <input type="file" id="proof-upload" name="proof" accept="image/*" required
+               style="margin-bottom: 1rem;">
+
+        <button type="submit" class="buy-now-button">Confirm Order</button>
+    </div>
+</form>
         </div>
     </div>
 

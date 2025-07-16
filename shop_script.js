@@ -169,35 +169,64 @@ if (addToCartBtn) {
   statusClose.addEventListener('click', () => statusModal.classList.remove('show'));
   statusModal.addEventListener('click', e => { if (e.target === statusModal) statusModal.classList.remove('show'); });
 
-  document.getElementById('buy-now-btn').addEventListener('click', async function () {
-    try {
-      const response = await fetch('process_order.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cart })
-      });
-      const result = await response.json();
-      const statusMessage = document.getElementById('status-message');
+  document.getElementById('order-form').addEventListener('submit', async function (e) {
+  e.preventDefault(); // ⛔ prevent reload
+  console.log("🧪 Submit handler triggered");
 
-      document.getElementById('cart-modal').classList.remove('show');
+  const proofInput = document.getElementById('proof-upload');
+  const file = proofInput.files[0];
 
-      if (result.success) {
-        statusMessage.innerHTML = `<div class="status-success"><h3>Order Placed Successfully!</h3><p>Thank you for your purchase.</p></div>`;
-        cart = [];
-        sessionStorage.setItem('cart', JSON.stringify(cart));
-        updateCartCount();
-        updateCartDisplay();
-      } else {
-        statusMessage.innerHTML = `<div class="status-error"><h3>Error Processing Order</h3><p>${result.message}</p></div>`;
-      }
-      statusModal.classList.add('show');
-    } catch (error) {
-      console.error('Error:', error);
-      const statusMessage = document.getElementById('status-message');
-      statusMessage.innerHTML = `<div class="status-error"><h3>Error Processing Order</h3><p>An unexpected error occurred. Please try again.</p></div>`;
-      statusModal.classList.add('show');
+  if (!file) {
+    alert("Please upload a proof of payment image.");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('proof', file);
+  formData.append('cart', JSON.stringify(cart)); // send cart as JSON string
+
+  try {
+    const response = await fetch('process_order.php', {
+      method: 'POST',
+      body: formData
+    });
+
+    const result = await response.json();
+    console.log('Server response:', result);
+
+    const statusMessage = document.getElementById('status-message');
+    document.getElementById('cart-modal').classList.remove('show');
+
+    if (result.success) {
+      statusMessage.innerHTML = `
+        <div class="status-success">
+          <h3>Order Placed Successfully!</h3>
+          <p>Thank you for your purchase.</p>
+        </div>`;
+      cart = [];
+      sessionStorage.setItem('cart', JSON.stringify(cart));
+      updateCartCount();
+      updateCartDisplay();
+    } else {
+      statusMessage.innerHTML = `
+        <div class="status-error">
+          <h3>Error Processing Order</h3>
+          <p>${result.message}</p>
+        </div>`;
     }
-  });
+
+    document.getElementById('status-modal').classList.add('show');
+  } catch (error) {
+    console.error('Error:', error);
+    const statusMessage = document.getElementById('status-message');
+    statusMessage.innerHTML = `
+      <div class="status-error">
+        <h3>Error Processing Order</h3>
+        <p>An unexpected error occurred. Please try again.</p>
+      </div>`;
+    document.getElementById('status-modal').classList.add('show');
+  }
+});;
 
   document.getElementById('increase-qty').addEventListener('click', () => {
     const input = document.getElementById('quantity-input');

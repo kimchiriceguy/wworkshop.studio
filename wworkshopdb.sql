@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 14, 2025 at 06:46 PM
+-- Generation Time: Jul 16, 2025 at 04:15 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -63,19 +63,21 @@ CREATE TABLE `appointments` (
 CREATE TABLE `orders` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `order_date` datetime DEFAULT current_timestamp()
+  `order_date` datetime DEFAULT current_timestamp(),
+  `proof_image` varchar(255) DEFAULT NULL,
+  `status` enum('pending','approved','declined') DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`id`, `user_id`, `order_date`) VALUES
-(9, 1, '2025-07-14 12:12:46'),
-(10, 1, '2025-07-14 12:13:12'),
-(15, 1, '2025-07-15 00:25:08'),
-(16, 1, '2025-07-15 00:29:37'),
-(17, 1, '2025-07-15 00:29:56');
+INSERT INTO `orders` (`id`, `user_id`, `order_date`, `proof_image`, `status`) VALUES
+(22, 1, '2025-07-16 20:35:58', 'proof_68779cae766ba.jpg', 'declined'),
+(23, 1, '2025-07-16 20:39:46', 'proof_68779d9237bc9.jpg', 'approved'),
+(24, 1, '2025-07-16 20:41:11', 'proof_68779de752e68.jpg', 'approved'),
+(25, 1, '2025-07-16 22:06:31', 'proof_6877b1e7abc19.jpg', 'declined'),
+(26, 1, '2025-07-16 22:09:38', 'proof_6877b2a2405c7.jpg', 'approved');
 
 -- --------------------------------------------------------
 
@@ -120,18 +122,17 @@ CREATE TABLE `purchases` (
 --
 
 INSERT INTO `purchases` (`id`, `order_id`, `user_id`, `product_id`, `price`, `item`, `quantity`) VALUES
-(9, NULL, NULL, NULL, 0.19, 'sda', 1),
-(10, NULL, NULL, NULL, 480.00, 'ORIGINAL WATER-BASED POMADE', 1),
-(11, NULL, NULL, NULL, 0.04, 'asdasddas', 1),
-(12, 9, 1, NULL, 420.00, 'SEA SALT TEXTURE SPRAY', 1),
-(13, 10, 1, NULL, 420.00, 'SEA SALT TEXTURE SPRAY', 4),
-(14, 10, 1, NULL, 380.00, 'DUST VOLUME POWER', 4),
-(15, 15, 1, 2, 420.00, 'SEA SALT TEXTURE SPRAY', 1),
-(16, 15, 1, 2, 420.00, 'SEA SALT TEXTURE SPRAY', 1),
-(17, 16, 1, 1, 380.00, 'DUST VOLUME POWER', 1),
-(18, 17, 1, 1, 380.00, 'DUST VOLUME POWER', 10),
-(19, 17, 1, 2, 420.00, 'SEA SALT TEXTURE SPRAY', 10),
-(20, 17, 1, 3, 480.00, 'ORIGINAL WATER-BASED POMADE', 10);
+(27, 22, 1, 1, 380.00, 'DUST VOLUME POWER', 1),
+(28, 22, 1, 2, 420.00, 'SEA SALT TEXTURE SPRAY', 1),
+(29, 22, 1, 3, 480.00, 'ORIGINAL WATER-BASED POMADE', 1),
+(30, 23, 1, 1, 380.00, 'DUST VOLUME POWER', 2),
+(31, 23, 1, 2, 420.00, 'SEA SALT TEXTURE SPRAY', 2),
+(32, 23, 1, 3, 480.00, 'ORIGINAL WATER-BASED POMADE', 3),
+(33, 24, 1, 1, 380.00, 'DUST VOLUME POWER', 1),
+(34, 24, 1, 2, 420.00, 'SEA SALT TEXTURE SPRAY', 2),
+(35, 24, 1, 3, 480.00, 'ORIGINAL WATER-BASED POMADE', 3),
+(36, 25, 1, 1, 380.00, 'DUST VOLUME POWER', 1),
+(37, 26, 1, 1, 380.00, 'DUST VOLUME POWER', 2);
 
 -- --------------------------------------------------------
 
@@ -144,15 +145,20 @@ CREATE TABLE `users` (
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `phone` varchar(255) NOT NULL
+  `phone` varchar(255) NOT NULL,
+  `role` enum('admin','user') NOT NULL DEFAULT 'user'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `email`, `phone`) VALUES
-(1, 'dummy', 'dummypass', 'dummy@dummy.com', '12345');
+INSERT INTO `users` (`id`, `username`, `password`, `email`, `phone`, `role`) VALUES
+(1, 'dummy', '$2y$10$XrwpUdZZH5dP8Lb2shFS6Ou9fcOBHM6hg2aqmHAfuqJfAuHbqxHsy', 'dummy@dummy.com', '12345', 'user'),
+(4, 'dummy1', '$2y$10$1Ki7A6TIEzvScocf8.Kb7e.RP08Vmt0yitxDixPYdYqNdn4FuTgSO', '', '', 'user'),
+(5, 'testuser', '$2y$10$syIakAKnSwg/3Mb6Rv.8QODZHIOspxUVC/5Z3L1a12MssBgKwalxK', 'test@example.com', '1234567890', 'user'),
+(6, 'Martin', '$2y$10$q7kafRlCHZaWrnjtm/PFzewAN821In2KunXqc2roTGt51Lsu6yHf.', 'martin@test.com', '09123456789', 'user'),
+(7, 'testtest', '$2y$10$tr.5o/1BCNcILYEd.XvniOxrrAN8FgO3CGXu1I4LjkX.STnNi3UHS', 'test@test.com', '09123456789', 'user');
 
 --
 -- Indexes for dumped tables
@@ -213,13 +219,13 @@ ALTER TABLE `admin_users`
 -- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -231,13 +237,13 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `purchases`
 --
 ALTER TABLE `purchases`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables

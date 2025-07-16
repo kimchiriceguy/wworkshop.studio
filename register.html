@@ -433,23 +433,18 @@
 
         // Form submission
         form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            if (password.value !== confirmPassword.value) {
-                showError('Passwords do not match');
-                return;
-            }
+    if (password.value !== confirmPassword.value) {
+        e.preventDefault();
+        showError('Passwords do not match');
+        return;
+    }
 
-            if (!validatePassword()) {
-                showError('Password does not meet requirements');
-                return;
-            }
+    if (!validatePassword()) {
+        e.preventDefault();
+        showError('Password does not meet requirements');
+        return;
+    }
 
-            // Simulate form submission (replace with actual PHP submission)
-            showSuccess('Account created successfully! Redirecting to login...');
-            setTimeout(() => {
-                window.location.href = 'admin_login.html';
-            }, 2000);
         });
 
         function showError(message) {

@@ -1,6 +1,6 @@
 <?php
 session_start();
-$_SESSION['user_id'] = 1; // 🔧 TEMP: Simulate a logged-in user (remove when login is set up)
+$_SESSION['user_id'] = 1; // 🔧 TEMP: Simulate logged-in user
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -14,7 +14,6 @@ $password = "";
 $database = "wworkshopdb";
 
 $conn = new mysqli($host, $username, $password, $database);
-
 if ($conn->connect_error) {
     die(json_encode(["success" => false, "message" => "Connection failed: " . $conn->connect_error]));
 }
@@ -25,36 +24,54 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Accept JSON input
-$data = json_decode(file_get_contents('php://input'), true);
-
-if (
-    !isset($data['cart']) ||
-    !is_array($data['cart']) ||
-    empty($data['cart'])
-) {
-    die(json_encode(["success" => false, "message" => "Invalid or empty cart data."]));
+// ⛔ Check proof file
+if (!isset($_FILES['proof']) || $_FILES['proof']['error'] !== UPLOAD_ERR_OK) {
+    die(json_encode(["success" => false, "message" => "Proof of payment image is missing or failed to upload."]));
 }
 
-$cart = $data['cart'];
+// ⛔ Check and decode cart
+if (!isset($_POST['cart'])) {
+    die(json_encode(["success" => false, "message" => "Cart data not received."]));
+}
+
+$cart = json_decode($_POST['cart'], true);
+if (!is_array($cart) || empty($cart)) {
+    die(json_encode(["success" => false, "message" => "Cart is invalid or empty."]));
+}
+
+// ✅ Handle image upload
+$uploadDir = "uploads/";
+if (!is_dir($uploadDir)) {
+    mkdir($uploadDir, 0755, true);
+}
+
+$ext = pathinfo($_FILES['proof']['name'], PATHINFO_EXTENSION);
+$filename = uniqid("proof_") . '.' . $ext;
+$targetPath = $uploadDir . $filename;
+
+if (!move_uploaded_file($_FILES['proof']['tmp_name'], $targetPath)) {
+    die(json_encode(["success" => false, "message" => "Failed to save proof image."]));
+}
+
+// ✅ Proceed to insert
 $conn->begin_transaction();
 
 try {
-    // Step 1: Create new order
-    $order_sql = "INSERT INTO orders(user_id) VALUES(?)";
+    // Insert order with proof image
+    $order_sql = "INSERT INTO orders (user_id, proof_image) VALUES (?, ?)";
     $order_stmt = $conn->prepare($order_sql);
-    $order_stmt->bind_param("i", $user_id);
+    $order_stmt->bind_param("is", $user_id, $filename);
     $order_stmt->execute();
     $order_id = $conn->insert_id;
 
-    // Step 2: Prepare insert for each item
+    // Insert each purchase item
     $item_sql = "INSERT INTO purchases (order_id, user_id, product_id, item, quantity, price)
                  VALUES (?, ?, ?, ?, ?, ?)";
     $item_stmt = $conn->prepare($item_sql);
 
     foreach ($cart as $item) {
         if (
-            !isset($item['id']) ||  // product_id
+            !isset($item['id']) || // product_id
             !isset($item['item']) ||
             !isset($item['quantity']) ||
             !isset($item['price'])
@@ -66,8 +83,8 @@ try {
             "iiisid",
             $order_id,
             $user_id,
-            $item['id'],        // product_id from shop page's data-id
-            $item['item'],      // item name
+            $item['id'],      // product_id
+            $item['item'],    // item name
             $item['quantity'],
             $item['price']
         );
@@ -76,9 +93,8 @@ try {
 
     $conn->commit();
     echo json_encode(["success" => true, "message" => "Order saved!", "order_id" => $order_id]);
-
 } catch (Exception $e) {
-    $conn->rollback(); 
+    $conn->rollback();
     echo json_encode(["success" => false, "message" => "Order failed: " . $e->getMessage()]);
 }
 
