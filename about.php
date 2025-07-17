@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,7 +20,12 @@
             <img src="./assets/logos/instagram-svgrepo-com.svg" alt="Instagram">
         </a>
         <span id="login-status">
-            <a href="admin_login.html">Login</a>
+            <?php if (isset($_SESSION['user_username'])): ?>
+                <span style="color: #fff; margin-right: 10px;">Welcome, <?php echo htmlspecialchars($_SESSION['user_username']); ?>!</span>
+                <a href="user_logout.php">Logout</a>
+            <?php else: ?>
+                <a href="user_login.php">Login</a>
+            <?php endif; ?>
         </span>
     </div>
 
@@ -33,7 +39,7 @@
 
 
     <div class="logo-container">
-        <a href="index.html">
+        <a href="index.php">
             <img src="./assets/logos/wworkshopstudio_5@2x copy.png" alt="Workshop Studio Logo" class="logo" id="logo">
         </a>
     </div>

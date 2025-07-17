@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -48,8 +49,13 @@
       <img src="./assets/logos/instagram-svgrepo-com.svg" alt="Instagram">
     </a>
     <span id="login-status">
-      <a href="admin_login.html">Login</a>
-    </span>
+      <?php if (isset($_SESSION['user_username'])): ?>
+          <span style="color: #fff; margin-right: 10px;">Welcome, <?php echo htmlspecialchars($_SESSION['user_username']); ?>!</span>
+          <a href="user_logout.php">Logout</a>
+      <?php else: ?>
+          <a href="user_login.php">Login</a>
+      <?php endif; ?>
+  </span>
   </div>
 
 
@@ -80,11 +86,11 @@
 
   <nav class="navbar">
     <ul class="navbar-menu">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="calendar.html" class="active">Calendar</a></li>
-      <li><a href="services.html">Services</a></li>
-      <li><a href="shop.html">Shop</a></li>
+      <li><a href="index.php">Home</a></li>
+      <li><a href="about.php">About</a></li>
+      <li><a href="calendar.php">Calendar</a></li>
+      <li><a href="services.php">Services</a></li>
+      <li><a href="shop.php">Shop</a></li>
     </ul>
   </nav>
 

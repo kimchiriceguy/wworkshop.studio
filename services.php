@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,8 +20,13 @@
       <img src="./assets/logos/instagram-svgrepo-com.svg" alt="Instagram">
     </a>
     <span id="login-status">
-      <a href="admin_login.html">Login</a>
-    </span>
+      <?php if (isset($_SESSION['user_username'])): ?>
+          <span style="color: #fff; margin-right: 10px;">Welcome, <?php echo htmlspecialchars($_SESSION['user_username']); ?>!</span>
+          <a href="user_logout.php">Logout</a>
+      <?php else: ?>
+          <a href="user_login.php">Login</a>
+      <?php endif; ?>
+  </span>
   </div>
 
   <div class="logo-container">
@@ -61,25 +67,25 @@
 
   <nav class="navbar">
     <ul class="navbar-menu">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="calendar.html">Calendar</a></li>
-      <li><a href="services.html">Services</a></li>
-      <li><a href="shop.html">Shop</a></li>
+      <li><a href="index.php">Home</a></li>
+      <li><a href="about.php">About</a></li>
+      <li><a href="calendar.php">Calendar</a></li>
+      <li><a href="services.php">Services</a></li>
+      <li><a href="shop.php">Shop</a></li>
     </ul>
   </nav>
 
   <!-- services related html -->
   <div class="services-container">
-    <div class="service-modal" onclick="window.location.href='calendar.html'">
+    <div class="service-modal" onclick="window.location.href='calendar.php'">
       <h2>Barbershop</h2>
       <p>Cut. Style. Fade.</p>
     </div>
-    <div class="service-modal" onclick="window.location.href='calendar.html'">
+    <div class="service-modal" onclick="window.location.href='calendar.php'">
       <h2>School</h2>
       <p>Learn the craft.</p>
     </div>
-    <div class="service-modal" onclick="window.location.href='calendar.html'">
+    <div class="service-modal" onclick="window.location.href='calendar.php'">
       <h2>Consultancy</h2>
       <p>Grow your business.</p>
     </div>

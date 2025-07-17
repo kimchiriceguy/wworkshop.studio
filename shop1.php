@@ -1,4 +1,22 @@
-<?php session_start(); ?>
+<?php
+session_start();
+require_once 'config/db.php';
+
+// Initialize cart if it doesn't exist
+if (!isset($_SESSION['cart'])) {
+    $_SESSION['cart'] = array();
+}
+
+// get the products from the db
+try {
+    $stmt = $pdo->query("SELECT * FROM products");
+    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch(PDOException $e) {
+    echo "Error: " . $e->getMessage();
+    $products = array();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,52 +29,8 @@
 </head>
 
 <body>
-    <div id="shop-fade-overlay" style="
-    position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(0,0,0,0.7);
-    z-index: 99999;
-    pointer-events: auto;
-    transition: opacity 0.6s;
-    opacity: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-">
-        <span style="color: #fff; font-size: 2rem; font-family: Inconsolata, monospace;">Welcome to the Shop</span>
-    </div>
-    <script>
-        // Fade out the overlay after 1.5 seconds
-        window.addEventListener('DOMContentLoaded', function () {
-            setTimeout(function () {
-                var overlay = document.getElementById('shop-fade-overlay');
-                overlay.style.opacity = '0';
-                setTimeout(function () {
-                    overlay.style.display = 'none';
-                }, 700); // Wait for the fade transition to finish
-            }, 700);
-        });
-    </script>
-
     <div class="logo-container">
         <img src="./assets/logos/wworkshopstudio_5@2x copy.png" alt="Workshop Studio Logo" class="logo">
-    </div>
-
-    <div class="topright-bar">
-        <a href="https://www.facebook.com/wworkshop.studio" target="_blank" title="Facebook">
-            <img src="./assets/logos/facebook-circle.svg" alt="Facebook">
-        </a>
-        <a href="https://www.instagram.com/wworkshop.studio/" target="_blank" title="Instagram">
-            <img src="./assets/logos/instagram-svgrepo-com.svg" alt="Instagram">
-        </a>
-        <span id="login-status">
-    <?php if (isset($_SESSION['user_username'])): ?>
-        <span style="color: #fff; margin-right: 10px;">Welcome, <?php echo htmlspecialchars($_SESSION['user_username']); ?>!</span>
-        <a href="user_logout.php">Logout</a>
-    <?php else: ?>
-        <a href="user_login.php">Login</a>
-    <?php endif; ?>
-</span>
     </div>
 
 
@@ -96,74 +70,33 @@
     </nav>
 
     <div class="shop-header">
-        <h1 style="display: inline-flex;">wworkshop grooming goods</h1>
-        <h1 style="display: inline-flex; margin-left: 50vw;">
+        <h1>wworkshop grooming goods</h1>
     </div>
 
     <!-- shopdiv 1 stuff -->
     <div class="shopdiv">
         <div class="list">
-            <div class="item"
-                data-id="1"
-                data-images='["./assets/shop/prod1/1.jpg", "./assets/shop/prod1/2.webp", "./assets/shop/prod1/3.webp", "./assets/shop/prod1/4.webp", "./assets/shop/prod1/5.webp"]'
-                data-description="DUST VOLUME POWDER adds volume and texture to all hair types and lengths with a natural, matte finish."
-                data-price="P380">
-                <img src="./assets/shop/prod1/1.jpg" alt="Product 1 preview">
-                <h2>DUST VOLUME POWER</h2>
-                <p>Price: P380</p>
-            </div>
-            <div class="item"
-                data-id="2"
-                data-images='["./assets/shop/prod2/1.jpg", "./assets/shop/prod2/2.webp", "./assets/shop/prod2/3.webp", "./assets/shop/prod2/4.webp", "./assets/shop/prod2/5.webp"]'
-                data-description="Create a loose, lived in look with ease or to be used as a pre-styling product when blow drying."
-                data-price="P420">
-                <img src="./assets/shop/prod2/1.jpg" alt="Product 2 preview">
-                <h2>SEA SALT TEXTURE SPRAY</h2>
-                <p>Price: P420</p>
-            </div>
-            <div class="item"
-                data-id="3"
-                data-images='["./assets/shop/prod3/1.jpg", "./assets/shop/prod3/2.webp", "./assets/shop/prod3/3.webp", "./assets/shop/prod3/4.webp", "./assets/shop/prod3/5.webp"]'
-                data-description="Original Water-based Pomade has been designed for the discerning guy who has a particular style in mind. Perfect for timeless, classic looks – such as high pompadours, side parts, and slick backs."
-                data-price="P480" data-types='["NOMAD", "FURY", "REVOLT"]'>
-                <img src="./assets/shop/prod3/1.jpg" alt="Product 2 preview">
-                <h2>ORIGINAL WATER-BASED POMADE</h2>
-                <p>Price: P480</p>
-            </div>
-            <div class="item" 
-                data-id="4"
-                data-images='["./assets/logos/logo-1.png"]' data-description="xxx." data-price="0">
-                <img src="./assets/logos/logo-1.png" alt="Product 1 preview">
-                <h2>xxx</h2>
-                <p>Price: Pxxx</p>
-            </div>
-            <div class="item" 
-                data-id="5"
-                data-images='["./assets/logos/logo-1.png"]' data-description="xxx." data-price="0">
-                <img src="./assets/logos/logo-1.png" alt="Product 1 preview">
-                <h2>xxx</h2>
-                <p>Price: Pxxx</p>
-            </div>
-            <div class="item" 
-                data-id="6"
-                data-images='["./assets/logos/logo-1.png"]' data-description="xxx." data-price="0">
-                <img src="./assets/logos/logo-1.png" alt="Product 1 preview">
-                <h2>xxx</h2>
-                <p>Price: Pxxx</p>
-            </div>
-            <div class="item" 
-                data-id="7"
-                data-images='["./assets/logos/logo-1.png"]' data-description="xxx." data-price="0">
-                <img src="./assets/logos/logo-1.png" alt="Product 1 preview">
-                <h2>xxx</h2>
-                <p>Price: Pxxx</p>
-            </div>
+            <?php foreach($products as $product): ?>
+                <?php if($product['category'] == 'grooming'): ?>
+                    <div class="item" 
+                        data-images='<?php echo htmlspecialchars($product['images']); ?>'
+                        data-description="<?php echo htmlspecialchars($product['description']); ?>"
+                        data-price="P<?php echo number_format($product['price'], 2); ?>"
+                        <?php if(!empty($product['types'])): ?>
+                            data-types='<?php echo htmlspecialchars($product['types']); ?>'
+                        <?php endif; ?>>
+                        <img src="<?php echo htmlspecialchars(json_decode($product['images'])[0]); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                        <h2><?php echo htmlspecialchars($product['name']); ?></h2>
+                        <p>Price: P<?php echo number_format($product['price'], 2); ?></p>
+                    </div>
+                <?php endif; ?>
+            <?php endforeach; ?>
         </div>
     </div>
 
-    <!--     <div class="shop-header-2">
+    <div class="shop-header-2">
         <h1>xxx</h1>
-    </div> -->
+    </div>
 
     <!-- shopdiv 2 stuff -->
     <div class="shopdiv" style="margin-top: -244px;">
@@ -246,17 +179,6 @@
             <span id="status-close" class="modal-close">&times;</span>
             <div id="status-message"></div>
         </div>
-    </div>
-
-    <div class="search-container">
-        <input type="text" class="search-input" placeholder="Search...">
-        <button class="search-button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-        </button>
     </div>
 
     <script src="shop_script.js"></script>
