@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $inputUsername = $_POST['username'];
     $inputPassword = $_POST['password'];
 
-    // for admins
+    // 1. Check if it's an admin
     $stmt = $conn->prepare("SELECT id, username, password FROM admin_users WHERE username = ?");
     $stmt->bind_param("s", $inputUsername);
     $stmt->execute();
@@ -34,8 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $stmt->close();
 
-    // this is for users
-    $stmt = $conn->prepare("SELECT id, username, password FROM reg_users WHERE username = ?");
+    // 2. Otherwise, check regular users
+    $stmt = $conn->prepare("SELECT id, username, password FROM users WHERE username = ?");
     $stmt->bind_param("s", $inputUsername);
     $stmt->execute();
     $stmt->store_result();
@@ -47,13 +47,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (password_verify($inputPassword, $hashedPassword)) {
             $_SESSION['user_logged_in'] = true;
             $_SESSION['user_username'] = $username;
-            header("Location: user_dashboard.php");
+            header("Location: index.php");
             exit();
         }
     }
     $stmt->close();
 
-    // If neither, redirect back with error
+    // Neither matched
     header("Location: admin_login.html?error=1");
     exit();
 }

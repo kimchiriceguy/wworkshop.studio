@@ -18,8 +18,17 @@
     <a href="https://www.instagram.com/wworkshop.studio/" target="_blank" title="Instagram">
       <img src="./assets/logos/instagram-svgrepo-com.svg" alt="Instagram">
     </a>
-    <span id="login-status">
-      <a href="admin_login.html">Login</a>
+                <?php
+                session_start();
+                ?>
+                <span id="login-status" style="color: white;">
+                    <?php if (isset($_SESSION['user_logged_in'])): ?>
+                        Welcome, <strong style="color: white;"><?= htmlspecialchars($_SESSION['user_username']) ?></strong>! 
+                        <a href="logout.php" style="margin-left: 10px; color: white;">Logout</a>
+                    <?php else: ?>
+                        <a href="admin_login.html" style="color: white;">Login</a>
+                    <?php endif; ?>
+                </span>
     </span>
   </div>
 
@@ -54,18 +63,18 @@
         <h1 aria-hidden="true">consultancy</h1>
         <h1 aria-hidden="true">barbershop</h1>
         <h1 aria-hidden="true">school</h1>
-        <h1 aria-hidden="true">consultancy</h1>
+        <h1 aria-hidden="true">consultancy</h1>s
       </div>
     </div>
   </div>
 
   <nav class="navbar">
     <ul class="navbar-menu">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="calendar.html">Calendar</a></li>
-      <li><a href="services.html">Services</a></li>
-      <li><a href="shop.html">Shop</a></li>
+      <li><a href="index.php">Home</a></li>
+      <li><a href="about.php">About</a></li>
+      <li><a href="calendar.php">Calendar</a></li>
+      <li><a href="services.php">Services</a></li>
+      <li><a href="shop.php">Shop</a></li>
     </ul>
   </nav>
 
