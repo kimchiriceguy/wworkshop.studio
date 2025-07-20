@@ -32,6 +32,7 @@ main {
   position: relative;
   margin: 0 auto;
   z-index: 20;
+  overflow: visible;
 }
 
 /*  */
@@ -266,7 +267,8 @@ main {
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
   padding: 0;
   width: 90vw;
-  overflow: hidden;
+  overflow: visible;
+  /* changed from hidden */
 }
 
 .left-panel,
@@ -628,45 +630,48 @@ main {
 }
 
 .time-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   margin-top: 0.5rem;
 }
 
 .time-input {
   width: 100%;
-  padding: 0.8rem;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  font-family: "Inconsolata", monospace;
+  max-width: 220px;
+  padding: 0.6rem 1rem;
+  border: 1.5px solid #ddd;
+  border-radius: 6px;
+  background: #fafafa;
   color: #222;
-  transition: all 0.2s ease;
-}
-
-.time-input:hover {
-  border-color: #f7c873;
+  font-family: "Inconsolata", monospace;
+  font-size: 1.05rem;
+  transition: border 0.2s, box-shadow 0.2s;
+  appearance: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
 .time-input:focus {
-  outline: none;
   border-color: #f7c873;
-  box-shadow: 0 0 0 2px rgba(247, 200, 115, 0.2);
+  outline: none;
+  box-shadow: 0 0 0 2px #f7c87333;
 }
 
-/* Invalid time selection */
-.time-input:invalid {
-  border-color: #ff4444;
+#selected-time-display {
+  font-size: 1rem;
+  color: #888;
+  font-family: "Inconsolata", monospace;
+  margin-left: 0.5rem;
+  min-width: 110px;
 }
 
-.time-input::-webkit-calendar-picker-indicator {
-  cursor: pointer;
-  opacity: 0.6;
-  transition: opacity 0.2s;
-}
-
-.time-input::-webkit-calendar-picker-indicator:hover {
-  opacity: 1;
+/* Optional: Custom arrow for dropdown */
+#time-input {
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' fill='none' stroke='gray' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 18px 18px;
 }
 
 .confirm-booking-btn {
@@ -695,145 +700,91 @@ main {
   transform: none;
 }
 
-/* Responsive */
-@media (max-width: 900px) {
-
-  .container,
-  .calendar-main-container {
-    flex-direction: column;
-    min-width: 0;
-    max-width: 98vw;
-    margin: 1rem auto;
-  }
-
-  .left-panel,
-  .calendar-left-panel,
-  .right-panel,
-  .calendar-right-panel {
-    min-width: 0;
-    width: 100%;
-    border-right: none;
-    border-bottom: 2px solid #f7c873;
-    padding: 1rem;
-  }
-
-  .divider,
-  .calendar-divider {
-    width: 100%;
-    height: 12px;
-    cursor: ns-resize;
-  }
-}
-
-@media (max-width: 600px) {
-
-  .container,
-  .calendar-main-container {
-    width: 100vw;
-    min-width: 0;
-    margin: 0;
-    border-radius: 0;
-    box-shadow: none;
-  }
-
-  .logo-container {
-    margin: 1rem 0;
-  }
-
-  #booking-form-container {
-    padding: 1rem 0.5rem;
-  }
-}
-
-.hidden {
-  display: none !important;
-}
-
-/* useless search bar */
-.search-container {
-  position: fixed;
-  top: 150px;
-  left: 205px;
-  z-index: 1001;
-  display: flex;
-  align-items: center;
-  transform: scale(0.8);
-}
-
-.search-input {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 20px;
-  padding: 0.8rem 1.2rem;
-  color: white;
-  font-family: "Inconsolata", monospace;
-  font-size: 0.9rem;
-  width: 200px;
-  transition: all 0.3s ease;
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: #f7c873;
-  width: 250px;
-}
-
-.search-input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.search-button {
-  background: transparent;
-  border: none;
-  color: white;
-  padding: 0.5rem;
-  cursor: pointer;
-  margin-left: -40px;
-  opacity: 0.7;
-  transition: opacity 0.3s ease;
-}
-
-.search-button:hover {
-  opacity: 1;
-}
-
-#success-modal.modal {
-  display: none;
-  position: fixed;
-  z-index: 9999;
-  left: 0;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-}
-
-#success-modal.show {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#success-modal .modal-content {
+/* Auth Forms */
+.auth-container {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 2rem;
   background: #fff;
-  padding: 2em;
   border-radius: 8px;
-  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.close-success-btn {
-  position: absolute;
-  right: 1em;
-  top: 1em;
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.auth-form input,
+.auth-form select {
+  width: 100%;
+  padding: 0.7rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #fafafa;
+  margin-bottom: 0.8rem;
+  transition: border 0.2s;
+}
+
+.auth-form input:focus,
+.auth-form select:focus {
+  border: 1.5px solid #f7c873;
+  outline: none;
+}
+
+.auth-form button[type="submit"] {
+  width: 100%;
+  padding: 0.8rem;
+  background: #f7c873;
+  color: #222;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: bold;
   cursor: pointer;
-  font-size: 1.5em;
+  margin-top: 1rem;
+  transition: background 0.2s, color 0.2s;
 }
 
+.auth-form button[type="submit"]:hover {
+  background: #222;
+  color: #fff;
+}
 
+/* Admin Dashboard Additions */
+.schedule-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.availability-form {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+/* User Status Display */
+.user-status {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  background: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+/* Social Media & Login Bar (top right corner) */
 .topright-bar {
   position: fixed;
   top: 80px;
-  /* or adjust as needed */
+  /* was 20px, now sits below the top bar */
   right: 30px;
   z-index: 9999;
   display: flex;
@@ -845,11 +796,17 @@ main {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
 }
 
+.topright-bar a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
 .topright-bar img {
   width: 32px;
   height: 32px;
-  filter: invert(1) grayscale(0.2) brightness(0.95);
   transition: filter 0.2s;
+  filter: invert(1) grayscale(0.2) brightness(0.95);
 }
 
 .topright-bar img:hover {
@@ -874,4 +831,116 @@ main {
   background: #fff;
   color: #8400ff;
   border: 1px solid #8400ff;
+}
+
+#service-options .service-option {
+  background: #f7c873;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: #222;
+  transition: background 0.2s, color 0.2s;
+}
+
+#service-options .service-option.selected {
+  background: #222;
+  color: #fff;
+}
+
+#service-options .service-option:hover {
+  background: #222;
+  color: #fff;
+}
+
+.calendar-day.has-available-slots {
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+/* Add these styles to your existing CSS */
+.date-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.booking-info {
+  margin-top: 4px;
+}
+
+.show-bookings-btn {
+  background: none;
+  border: none;
+  padding: 2px 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.show-bookings-btn:hover {
+  color: #222;
+}
+
+.bookings-dropdown {
+  display: none;
+  position: fixed;
+  top: auto;
+  left: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px;
+  min-width: 220px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.18);
+  z-index: 9000;
+}
+
+.bookings-dropdown.show {
+  display: block;
+}
+
+.barber-summary {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.barber-summary:last-child {
+  border-bottom: none;
+}
+
+.time-slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.time-slot {
+  font-size: 0.8rem;
+  padding: 2px 4px;
+  border-radius: 2px;
+}
+
+.time-slot.booked {
+  background: #ffebee;
+  color: #d32f2f;
+}
+
+.time-slot.available {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+#schedule-modal .schedule-modal-content {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 800px;
+  width: 95vw;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
 }
