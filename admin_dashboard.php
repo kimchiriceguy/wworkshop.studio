@@ -45,7 +45,7 @@ if (isset($_GET['decline_order'])) {
     exit();
 }
 
-// Add appointment (optional, leave if needed)
+// Add appointment (removed sa final, can add if needed in the future)
 if (isset($_POST['add_appointment'])) {
     $barber = $conn->real_escape_string($_POST['barber']);
     $service = $conn->real_escape_string($_POST['service']);
@@ -56,11 +56,22 @@ if (isset($_POST['add_appointment'])) {
     exit();
 }
 
-// Delete appointment (optional)
+// Delete appointment (if needed pa)
 if (isset($_GET['delete_appointment'])) {
     $id = intval($_GET['delete_appointment']);
     $conn->query("DELETE FROM appointments WHERE id = $id");
     header("Location: admin_dashboard.php");
+    exit();
+}
+
+// Toggle barber active/inactive
+if (isset($_GET['toggle_barber'])) {
+    $barberId = intval($_GET['toggle_barber']);
+    $status = $_GET['status'] === 'active' ? 'inactive' : 'active';
+    $stmt = $conn->prepare("UPDATE barbers SET status = ? WHERE id = ?");
+    $stmt->bind_param("si", $status, $barberId);
+    $stmt->execute();
+    header("Location: admin_dashboard.php?tab=barbers");
     exit();
 }
 ?>
@@ -254,6 +265,7 @@ if (isset($_GET['delete_appointment'])) {
         <div class="tabs">
             <button class="tab-button active" onclick="switchTab('appointments')">appointments</button>
             <button class="tab-button" onclick="switchTab('purchases')">orders</button>
+            <button class="tab-button" onclick="switchTab('barbers')">barbers</button>
         </div>
 
         <!-- Appointments Tab -->
@@ -404,6 +416,40 @@ if (isset($_GET['delete_appointment'])) {
                 </table>
             </div>
         </div>
+            <!-- Barbers Tab -->
+            <div id="barbers" class="tab-content">
+                <div class="crud-section">
+                    <h2>manage barbers</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $barberResult = $conn->query("SELECT id, name, status FROM barbers");
+                            while ($barber = $barberResult->fetch_assoc()):
+                            ?>
+                            <tr>
+                                <td><?php echo $barber['id']; ?></td>
+                                <td><?php echo htmlspecialchars($barber['name']); ?></td>
+                                <td><?php echo htmlspecialchars($barber['status']); ?></td>
+                                <td class="action-buttons">
+                                    <a href="?toggle_barber=<?php echo $barber['id']; ?>&status=<?php echo $barber['status']; ?>" class="btn">
+                                        Set <?php echo $barber['status'] === 'active' ? 'inactive' : 'active'; ?>
+                                    </a>
+                                </td>
+                            </tr>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+</div>
 
     </div>
 
