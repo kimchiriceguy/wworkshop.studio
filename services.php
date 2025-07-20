@@ -80,15 +80,15 @@
 
   <!-- services related html -->
   <div class="services-container">
-    <div class="service-modal" onclick="window.location.href='calendar.html'">
+    <div class="service-modal" onclick="window.location.href='calendar.php'">
       <h2>Barbershop</h2>
       <p>Cut. Style. Fade.</p>
     </div>
-    <div class="service-modal" onclick="window.location.href='calendar.html'">
+    <div class="service-modal" onclick="window.location.href='calendar.php'">
       <h2>School</h2>
       <p>Learn the craft.</p>
     </div>
-    <div class="service-modal" onclick="window.location.href='calendar.html'">
+    <div class="service-modal" onclick="window.location.href='calendar.php'">
       <h2>Consultancy</h2>
       <p>Grow your business.</p>
     </div>
