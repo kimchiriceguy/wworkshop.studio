@@ -22,13 +22,13 @@
                 session_start();
                 ?>
                 <span id="login-status" style="display: flex; align-items: center; gap: 10px; color: white;">
-                    <?php if (isset($_SESSION['user_logged_in'])): ?>
-                        <span>Welcome, <strong><?= htmlspecialchars($_SESSION['user_username']) ?></strong>!</span>
-                        <a href="logout.php" class="logout-button">Logout</a>
-                    <?php else: ?>
-                        <a href="admin_login.html">Login</a>
-                    <?php endif; ?>
-                </span>
+                <?php if (isset($_SESSION['user_logged_in'])): ?>
+                    Welcome, <strong style="color: white;"><?= htmlspecialchars($_SESSION['user_username'])?></strong>! 
+                    <a href="user_dashboard.php?tab=account" style="margin-left: 10px; color: white;">Account</a>
+                    <a href="logout.php" style="margin-left: 10px; color: white;">Logout</a>
+                <?php else: ?>
+                    <a href="admin_login.html" style="color: white;">Login</a>
+                <?php endif; ?>
     </div>
 
     <!-- social media logos (old, can be removed if not needed) -->
