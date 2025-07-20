@@ -5,7 +5,6 @@ if (!isset($_SESSION['admin_logged_in']) || !$_SESSION['admin_logged_in']) {
     exit();
 }
 
-// Database connection
 $host = "localhost";
 $username = "root";
 $password = "";
@@ -16,7 +15,22 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Approve or Decline Orders
+// Appointment status update
+if (isset($_GET['confirm_appointment'])) {
+    $id = intval($_GET['confirm_appointment']);
+    $conn->query("UPDATE appointments SET status = 'confirmed' WHERE id = $id");
+    header("Location: admin_dashboard.php");
+    exit();
+}
+
+if (isset($_GET['cancel_appointment'])) {
+    $id = intval($_GET['cancel_appointment']);
+    $conn->query("UPDATE appointments SET status = 'cancelled' WHERE id = $id");
+    header("Location: admin_dashboard.php");
+    exit();
+}
+
+// Order status update
 if (isset($_GET['approve_order'])) {
     $orderId = intval($_GET['approve_order']);
     $conn->query("UPDATE orders SET status = 'approved' WHERE id = $orderId");
@@ -31,39 +45,21 @@ if (isset($_GET['decline_order'])) {
     exit();
 }
 
-// Create: Add Appointment
+// Add appointment (optional, leave if needed)
 if (isset($_POST['add_appointment'])) {
     $barber = $conn->real_escape_string($_POST['barber']);
     $service = $conn->real_escape_string($_POST['service']);
     $date = $_POST['date'];
     $time = $_POST['time'];
-    $conn->query("INSERT INTO appointments (barber, service, date, time) VALUES ('$barber', '$service', '$date', '$time')");
+    $conn->query("INSERT INTO appointments (barber_id, service, date, time) VALUES ('$barber', '$service', '$date', '$time')");
     header("Location: admin_dashboard.php");
     exit();
 }
 
-// Create: Add Purchase
-if (isset($_POST['add_purchase'])) {
-    $item = $conn->real_escape_string($_POST['item']);
-    $quantity = intval($_POST['quantity']);
-    $price = floatval($_POST['price']);
-    $conn->query("INSERT INTO purchases (item, quantity, price) VALUES ('$item', $quantity, $price)");
-    header("Location: admin_dashboard.php");
-    exit();
-}
-
-// Delete: Appointment
+// Delete appointment (optional)
 if (isset($_GET['delete_appointment'])) {
     $id = intval($_GET['delete_appointment']);
     $conn->query("DELETE FROM appointments WHERE id = $id");
-    header("Location: admin_dashboard.php");
-    exit();
-}
-
-// Delete: Purchase
-if (isset($_GET['delete_purchase'])) {
-    $id = intval($_GET['delete_purchase']);
-    $conn->query("DELETE FROM purchases WHERE id = $id");
     header("Location: admin_dashboard.php");
     exit();
 }
@@ -262,7 +258,7 @@ if (isset($_GET['delete_purchase'])) {
 
         <!-- Appointments Tab -->
         <div id="appointments" class="tab-content active">
-            <div class="crud-section">
+            <!-- <div class="crud-section">
                 <h2>add new appointment</h2>
                 <form action="admin_dashboard.php" method="POST">
                     <div class="form-group">
@@ -283,7 +279,7 @@ if (isset($_GET['delete_purchase'])) {
                     </div>
                     <button type="submit" name="add_appointment" class="btn">add appointment</button>
                 </form>
-            </div>
+            </div> -->
 
             <div class="crud-section">
                 <h2>appointments list</h2>
@@ -291,29 +287,38 @@ if (isset($_GET['delete_purchase'])) {
                     <thead>
                         <tr>
                             <th>id</th>
+                            <th>user_id</th>
                             <th>barber</th>
                             <th>service</th>
                             <th>date</th>
                             <th>time</th>
+                            <th>status</th>
                             <th>actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                        $result = $conn->query("SELECT * FROM appointments ORDER BY date, time");
-                        while ($row = $result->fetch_assoc()):
-                        ?>
-                        <tr>
-                            <td><?php echo $row['id']; ?></td>
-                            <td><?php echo htmlspecialchars($row['barber']); ?></td>
-                            <td><?php echo htmlspecialchars($row['service']); ?></td>
-                            <td><?php echo $row['date']; ?></td>
-                            <td><?php echo $row['time']; ?></td>
-                            <td class="action-buttons">
-                                <a href="edit_appointment.php?id=<?php echo $row['id']; ?>" class="btn">edit</a>
-                                <a href="?delete_appointment=<?php echo $row['id']; ?>" class="btn" onclick="return confirm('Delete this appointment?');">delete</a>
-                            </td>
-                        </tr>
+                            $result = $conn->query("SELECT * FROM appointments ORDER BY date, time");
+                            while ($row = $result->fetch_assoc()):
+                            ?>
+                            <tr>
+                                <td><?php echo $row['id']; ?></td>
+                                <td><?php echo $row['user_id']; ?></td>
+                                <td><?php echo htmlspecialchars($row['barber_id']); ?></td>
+                                <td><?php echo htmlspecialchars($row['service']); ?></td>
+                                <td><?php echo $row['date']; ?></td>
+                                <td><?php echo $row['time']; ?></td>
+                                <td><?php echo ucfirst($row['status']); ?></td>
+                                <td class="action-buttons">
+                                    <?php if ($row['status'] === 'pending'): ?>
+                                        <a href="?confirm_appointment=<?php echo $row['id']; ?>" class="btn">Confirm</a>
+                                        <a href="?cancel_appointment=<?php echo $row['id']; ?>" class="btn" onclick="return confirm('Cancel this appointment?');">Cancel</a>
+                                    <?php else: ?>
+                                        <em><?php echo ucfirst($row['status']); ?></em>
+                                    <?php endif; ?>
+                                    <!-- <a href="?delete_appointment=<?php echo $row['id']; ?>" class="btn" onclick="return confirm('Delete this appointment?');">Delete</a> -->
+                                </td>
+                            </tr>
                         <?php endwhile; ?>
                     </tbody>
                 </table>

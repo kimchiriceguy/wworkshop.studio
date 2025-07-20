@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $inputUsername = $_POST['username'];
     $inputPassword = $_POST['password'];
 
-    // 1. Check if it's an admin
+    // check if admin
     $stmt = $conn->prepare("SELECT id, username, password FROM admin_users WHERE username = ?");
     $stmt->bind_param("s", $inputUsername);
     $stmt->execute();
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $stmt->close();
 
-    // 2. Otherwise, check regular users
+    // check regular users
     $stmt = $conn->prepare("SELECT id, username, password FROM users WHERE username = ?");
     $stmt->bind_param("s", $inputUsername);
     $stmt->execute();
@@ -47,13 +47,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (password_verify($inputPassword, $hashedPassword)) {
             $_SESSION['user_logged_in'] = true;
             $_SESSION['user_username'] = $username;
+            $_SESSION['user_id'] = $id; //added to store ID as it is needed in calendar booking
             header("Location: index.php");
             exit();
         }
     }
     $stmt->close();
 
-    // Neither matched
+    // Neither matched or wala sa db
     header("Location: admin_login.html?error=1");
     exit();
 }
