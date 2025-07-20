@@ -47,14 +47,14 @@ try {
     $time = trim($data['time']);
     $service = trim($data['service']);
 
-    // ✅ Get user_id from session
+    // Get user_id from session
     if (!isset($_SESSION['user_id'])) {
         die(json_encode(["success" => false, "message" => "User not logged in."]));
     }
 
     $user_id = $_SESSION['user_id'];
 
-    // ✅ Optional: Check if user still exists
+    //Check if user still exists
     $userCheckStmt = $conn->prepare("SELECT id FROM users WHERE id = ?");
     $userCheckStmt->bind_param("i", $user_id);
     $userCheckStmt->execute();
