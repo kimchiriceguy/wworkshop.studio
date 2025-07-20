@@ -24,6 +24,7 @@
                 <span id="login-status" style="color: white;">
                     <?php if (isset($_SESSION['user_logged_in'])): ?>
                         Welcome, <strong style="color: white;"><?= htmlspecialchars($_SESSION['user_username']) ?></strong>! 
+                        <a href="user_dashboard.php" style="margin-left: 10px; color: white;">Account</a>
                         <a href="logout.php" style="margin-left: 10px; color: white;">Logout</a>
                     <?php else: ?>
                         <a href="admin_login.html" style="color: white;">Login</a>
