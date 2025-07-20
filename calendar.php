@@ -47,9 +47,17 @@
     <a href="https://www.instagram.com/wworkshop.studio/" target="_blank" title="Instagram">
       <img src="./assets/logos/instagram-svgrepo-com.svg" alt="Instagram">
     </a>
-    <span id="login-status">
-      <a href="admin_login.html">Login</a>
-    </span>
+                <?php
+                session_start();
+                ?>
+                <span id="login-status" style="color: white;">
+                    <?php if (isset($_SESSION['user_logged_in'])): ?>
+                        Welcome, <strong style="color: white;"><?= htmlspecialchars($_SESSION['user_username']) ?></strong>! 
+                        <a href="logout.php" style="margin-left: 10px; color: white;">Logout</a>
+                    <?php else: ?>
+                        <a href="admin_login.html" style="color: white;">Login</a>
+                    <?php endif; ?>
+                </span>
   </div>
 
 
@@ -285,6 +293,5 @@
   <script src="calendar_script.js"></script>
 
 </body>
-
 
 </html>
