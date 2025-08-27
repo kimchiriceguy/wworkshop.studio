@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - wworkshop.studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #000000;
+            --secondary-color: #1a1a1a;
+            --accent-color: #333333;
+            --text-color: #ffffff;
+            --light-gray: #2a2a2a;
+            --border-color: #333333;
+            --success-color: #4a4a4a;
+            --danger-color: #8B0000;
+            --border-radius: 0px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 400;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            opacity: 0.7;
+            font-size: 1rem;
+            text-transform: lowercase;
+        }
+
+        .logo-container {
+            margin-bottom: 2rem;
+        }
+
+        .logo-container img {
+            height: 40px;
+            width: auto;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding: 0;
+        }
+
+        .tab-button {
+            padding: 1rem 2rem;
+            border: none;
+            background-color: transparent;
+            color: var(--text-color);
+            cursor: pointer;
+            font-weight: 400;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-button::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: var(--text-color);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .tab-button:hover::after,
+        .tab-button.active::after {
+            transform: scaleX(1);
+        }
+
+        .crud-section {
+            background-color: var(--secondary-color);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .crud-section h2 {
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            font-weight: 400;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+            color: var(--text-color);
+            text-transform: lowercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--text-color);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: 1px solid var(--border-color);
+            background-color: transparent;
+            color: var(--text-color);
+            cursor: pointer;
+            font-weight: 400;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--text-color);
+            color: var(--primary-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 1rem;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            text-transform: lowercase;
+        }
+
+        th {
+            font-weight: 400;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+
+        tr:hover {
+            background-color: var(--accent-color);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-buttons .btn {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+
+        .success-message {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--success-color);
+            color: var(--text-color);
+            padding: 1rem 1.5rem;
+            border: 1px solid var(--border-color);
+            animation: slideIn 0.3s ease;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .crud-section {
+                padding: 1rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .tab-button {
+                width: 100%;
+                text-align: left;
+                padding: 1rem;
+            }
+
+            th,
+            td {
+                padding: 0.5rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="topright-bar">
+        <a href="https://www.facebook.com/wworkshop.studio" target="_blank" title="Facebook">
+            <img src="./assets/logos/facebook-circle.svg" alt="Facebook">
+        </a>
+        <a href="https://www.instagram.com/wworkshop.studio/" target="_blank" title="Instagram">
+            <img src="./assets/logos/instagram-svgrepo-com.svg" alt="Instagram">
+        </a>
+        <span id="login-status">
+            <a href="admin_login.html">Login</a>
+        </span>
+    </div>
+
+    <div class="header">
+        <div class="container">
+            <div class="logo-container">
+                <img src="./assets/logos/wworkshopstudio_5@2x copy.png" alt="Workshop Studio Logo">
+            </div>
+            <h1>admin dashboard</h1>
+            <p>manage products and appointments</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('products')">
+                products
+            </button>
+            <button class="tab-button" onclick="switchTab('appointments')">
+                appointments
+            </button>
+        </div>
+
+        <!-- Products Tab -->
+        <div id="products" class="tab-content active">
+            <div class="crud-section">
+                <h2>add/edit product</h2>
+                <form id="productForm">
+                    <div class="form-group">
+                        <label for="productName">product name</label>
+                        <input type="text" id="productName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productDescription">description</label>
+                        <textarea id="productDescription" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">price</label>
+                        <input type="number" id="productPrice" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productStock">stock</label>
+                        <input type="number" id="productStock" required>
+                    </div>
+                    <button type="submit" class="btn">save product</button>
+                </form>
+            </div>
+
+            <div class="crud-section">
+                <h2>products list</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>name</th>
+                            <th>description</th>
+                            <th>price</th>
+                            <th>stock</th>
+                            <th>actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTableBody">
+                        <!-- Sample product row -->
+                        <tr>
+                            <td>sample product</td>
+                            <td>this is a sample product description</td>
+                            <td>$99.99</td>
+                            <td>10</td>
+                            <td class="action-buttons">
+                                <button class="btn" onclick="editProduct(1)">edit</button>
+                                <button class="btn" onclick="deleteProduct(1)">delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Appointments Tab -->
+        <div id="appointments" class="tab-content">
+            <div class="crud-section">
+                <h2>add/edit appointment</h2>
+                <form id="appointmentForm">
+                    <div class="form-group">
+                        <label for="clientName">Barber</label>
+                        <input type="text" id="clientName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="appointmentDate">Date</label>
+                        <input type="date" id="appointmentDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="appointmentTime">Time</label>
+                        <input type="time" id="appointmentTime" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="serviceType">Service Type</label>
+                        <select id="serviceType" required>
+                            <option value="">Select a service</option>
+                            <option value="consultation">consultation</option>
+                            <option value="repair">repair</option>
+                            <option value="maintenance">maintenance</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="appointmentNotes">notes</label>
+                        <textarea id="appointmentNotes" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn">save appointment</button>
+                </form>
+            </div>
+
+            <div class="crud-section">
+                <h2>appointments list</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>client name</th>
+                            <th>date</th>
+                            <th>time</th>
+                            <th>service type</th>
+                            <th>notes</th>
+                            <th>actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="appointmentsTableBody">
+                        <!-- Sample appointment row -->
+                        <tr>
+                            <td>john doe</td>
+                            <td>2024-03-20</td>
+                            <td>14:00</td>
+                            <td>consultation</td>
+                            <td>initial meeting</td>
+                            <td class="action-buttons">
+                                <button class="btn" onclick="editAppointment(1)">edit</button>
+                                <button class="btn" onclick="deleteAppointment(1)">delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show selected tab content and activate button
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`button[onclick="switchTab('${tabId}')"]`).classList.add('active');
+        }
+
+        // Product CRUD operations (to be implemented with backend)
+        function editProduct(id) {
+            // Populate form with product data
+            console.log('Editing product:', id);
+        }
+
+        function deleteProduct(id) {
+            if (confirm('Are you sure you want to delete this product?')) {
+                console.log('Deleting product:', id);
+            }
+        }
+
+        // Appointment CRUD operations (to be implemented with backend)
+        function editAppointment(id) {
+            // Populate form with appointment data
+            console.log('Editing appointment:', id);
+        }
+
+        function deleteAppointment(id) {
+            if (confirm('Are you sure you want to delete this appointment?')) {
+                console.log('Deleting appointment:', id);
+            }
+        }
+
+        // Form submissions
+        document.getElementById('productForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Collect form data
+            const productData = {
+                name: document.getElementById('productName').value,
+                description: document.getElementById('productDescription').value,
+                price: parseFloat(document.getElementById('productPrice').value),
+                stock: parseInt(document.getElementById('productStock').value)
+            };
+
+            // Create new table row
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${productData.name}</td>
+                <td>${productData.description}</td>
+                <td>$${productData.price.toFixed(2)}</td>
+                <td>${productData.stock}</td>
+                <td class="action-buttons">
+                    <button class="btn" onclick="editProduct(${Date.now()})">edit</button>
+                    <button class="btn" onclick="deleteProduct(${Date.now()})">delete</button>
+                </td>
+            `;
+
+            // Add new row to table
+            document.getElementById('productsTableBody').appendChild(tr);
+
+            // Show success message
+            const successMessage = document.createElement('div');
+            successMessage.className = 'success-message';
+            successMessage.textContent = 'Product saved successfully!';
+            document.body.appendChild(successMessage);
+
+            // Remove success message after 3 seconds
+            setTimeout(() => {
+                successMessage.remove();
+            }, 3000);
+
+            // Clear form
+            document.getElementById('productForm').reset();
+        });
+
+        document.getElementById('appointmentForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Collect form data
+            const appointmentData = {
+                clientName: document.getElementById('clientName').value,
+                date: document.getElementById('appointmentDate').value,
+                time: document.getElementById('appointmentTime').value,
+                serviceType: document.getElementById('serviceType').value,
+                notes: document.getElementById('appointmentNotes').value
+            };
+
+            // Format date and time for display
+            const formattedDate = new Date(appointmentData.date).toLocaleDateString();
+            const formattedTime = appointmentData.time;
+
+            // Create new table row
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${appointmentData.clientName}</td>
+                <td>${formattedDate}</td>
+                <td>${formattedTime}</td>
+                <td>${appointmentData.serviceType}</td>
+                <td>${appointmentData.notes}</td>
+                <td class="action-buttons">
+                    <button class="btn" onclick="editAppointment(${Date.now()})">edit</button>
+                    <button class="btn" onclick="deleteAppointment(${Date.now()})">delete</button>
+                </td>
+            `;
+
+            // Add new row to table
+            document.getElementById('appointmentsTableBody').appendChild(tr);
+
+            // Show success message
+            const successMessage = document.createElement('div');
+            successMessage.className = 'success-message';
+            successMessage.textContent = 'Appointment saved successfully!';
+            document.body.appendChild(successMessage);
+
+            // Remove success message after 3 seconds
+            setTimeout(() => {
+                successMessage.remove();
+            }, 3000);
+
+            // Clear form
+            document.getElementById('appointmentForm').reset();
+        });
+    </script>
+</body>
+
+</html>
