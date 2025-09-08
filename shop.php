@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>wworkshop.studio</title>
-    <link rel="stylesheet" href="shop_styles.css">
+    <link rel="stylesheet" href="/shop page/shop_styles.css">
     <link rel="icon" type="image/jpg" href="favicon.png">
 </head>
 
@@ -276,7 +276,7 @@
         </button>
     </div>
 
-    <script src="shop_script.js"></script>
+    <script src="/shop page/shop_script.js"></script>
 </body>
 
 </html>

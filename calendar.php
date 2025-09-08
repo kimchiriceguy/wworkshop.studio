@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>wworkshop.studio</title>
-  <link rel="stylesheet" href="calendar_styles.css" />
+  <link rel="stylesheet" href="/calendar page/calendar_styles.css" />
 </head>
 
 <body>
@@ -290,7 +290,7 @@
     </button>
   </div>
 
-  <script src="calendar_script.js"></script>
+  <script src="/calendar page/calendar_script.js"></script>
 
 </body>
 

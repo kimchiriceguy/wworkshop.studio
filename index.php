@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>wworkshop.studio</title>
-    <link rel="stylesheet" href="homestyles.css">
+    <link rel="stylesheet" href="/homepage/homestyles.css">
     <link rel="icon" type="image/jpg" href="favicon.png">
 </head>
 
@@ -159,7 +159,7 @@
     </video>
 
 
-    <script src="homeapp.js"></script>
+    <script src="/homepage/homeapp.js"></script>
 </body>
 
 </html>

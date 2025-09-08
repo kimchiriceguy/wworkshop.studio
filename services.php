@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>wworkshop.studio</title>
-  <link rel="stylesheet" href="services_styles.css">
+  <link rel="stylesheet" href="/services page/services_styles.css">
   <link rel="icon" type="image/jpg" href="favicon.png">
 </head>
 
@@ -107,7 +107,7 @@
   </div>
 
 
-  <script src="homeapp.js"></script>
+  <script src="/services page/services_script.js"></script>
 </body>
 
 </html>

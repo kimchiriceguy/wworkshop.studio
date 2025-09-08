@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>wworkshop.studio</title>
-    <link rel="stylesheet" href="styles_about.css">
+    <link rel="stylesheet" href="/aboutpage/styles_about.css">
     <link rel="icon" type="image/jpg" href="favicon.png">
 </head>
 
@@ -172,7 +172,7 @@
         Your browser does not support the video tag.
     </video>
 
-    <script src="about.js"></script>
+    <script src="/aboutpage/about.js"></script>
 </body>
 
 </html>
