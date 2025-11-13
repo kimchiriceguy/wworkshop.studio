@@ -1,0 +1,23 @@
+Ok so now that we're using react thing of all the components that you're probabaly going to need.
+
+here's the list:
+
+I. Reusable UI components
+Card – generic content cards (text + image)
+StoreCard
+Popup / Modal
+InfiniteMarquee
+FormInput
+ImageGaller
+Carousel / Slider
+Dropdown / Select
+Loader / Spinner – for async data loading
+Alert / Toast
+
+2. "Duh" Ui stuff
+Navbar
+Footer
+Button
+
+
+
