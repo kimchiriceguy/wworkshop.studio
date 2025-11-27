@@ -1,0 +1,97 @@
+.carousel {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.carousel .list {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.carousel .list .item {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.carousel .list .item.active {
+  opacity: 1;
+  z-index: 1;
+}
+
+.carousel .content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel.next .list .item {
+  animation: slideNext 3s ease;
+}
+
+.carousel.prev .list .item {
+  animation: slidePrev 3s ease;
+}
+
+.thumbnail {
+  position: fixed;
+  bottom: 100px;
+  right: 50px;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.thumbnail .item img {
+  max-width: 200px;
+  height: auto;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.thumbnail .item img:hover {
+  transform: scale(1.05);
+}
+
+.time {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  background: #8400ff;
+  animation: timerBar 5s linear;
+}
+
+@keyframes slideNext {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes slidePrev {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes timerBar {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+

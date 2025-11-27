@@ -1,0 +1,100 @@
+.calendar-container {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1.5rem;
+  color: white;
+  font-family: "Inconsolata", monospace;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.calendar-header h2 {
+  margin: 0;
+  color: white;
+  font-size: 1.5rem;
+}
+
+.month-nav {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.month-nav:hover {
+  background: rgba(132, 0, 255, 0.3);
+  border-color: #8400ff;
+}
+
+#calendar {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#calendar thead th {
+  padding: 0.75rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.calendar-day {
+  padding: 0.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.calendar-day:hover:not(.past-date) {
+  background: rgba(132, 0, 255, 0.2);
+  border-color: #8400ff;
+}
+
+.calendar-day.past-date {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.calendar-day.current-day {
+  background: rgba(132, 0, 255, 0.3);
+}
+
+.calendar-day.has-appointments::after {
+  content: '•';
+  color: #8400ff;
+  font-size: 1.5rem;
+  position: absolute;
+  bottom: 0.25rem;
+  right: 0.25rem;
+}
+
+.calendar-day.selected-date {
+  background: #8400ff;
+  border-color: #8400ff;
+}
+
+.date-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+}
+
+.date-number {
+  font-size: 1rem;
+  color: white;
+}

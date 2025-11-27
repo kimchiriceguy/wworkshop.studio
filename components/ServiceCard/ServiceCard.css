@@ -1,0 +1,30 @@
+.service-modal {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  color: white;
+  font-family: "Inconsolata", monospace;
+}
+
+.service-modal:hover {
+  transform: translateY(-5px);
+  border-color: #8400ff;
+  background: rgba(132, 0, 255, 0.1);
+}
+
+.service-modal h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.service-modal p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+}
+

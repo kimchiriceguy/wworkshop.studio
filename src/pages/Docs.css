@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap');
+
+.docs-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 100vh;
+  font-family: "Inconsolata", monospace;
+  background: #000;
+  color: #fff;
+}
+
+.docs-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: #8400ff;
+}
+
+.components-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.component-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.component-card:hover {
+  transform: translateY(-5px);
+  border-color: #8400ff;
+  background: rgba(132, 0, 255, 0.1);
+}
+
+.component-card h2 {
+  color: #8400ff;
+  margin-bottom: 0.5rem;
+}
+
+.component-card p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 2rem;
+  color: #8400ff;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.doc-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 100vh;
+  font-family: "Inconsolata", monospace;
+  background: #000;
+  color: #fff;
+}
+
+.doc-page h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #8400ff;
+}
+
+.demo-section {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
+.demo-section h2 {
+  color: #8400ff;
+  margin-bottom: 1rem;
+}
+
+.code-block {
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 1.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.code-block pre {
+  color: #00ff00;
+  font-family: "Inconsolata", monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.props-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.props-table th,
+.props-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.props-table th {
+  background: rgba(132, 0, 255, 0.2);
+  color: #8400ff;
+}
+
+.instruction {
+  background: rgba(132, 0, 255, 0.1);
+  border-left: 4px solid #8400ff;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 4px;
+}
+
+.instruction h3 {
+  color: #8400ff;
+  margin-bottom: 0.5rem;
+}
+
+.doc-page ul {
+  margin-left: 2rem;
+  line-height: 2;
+}
+
+.doc-page ul li {
+  margin-bottom: 0.5rem;
+}
+
+.live-demo {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 2rem;
+  margin: 1rem 0;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+

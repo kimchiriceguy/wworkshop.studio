@@ -1,0 +1,76 @@
+.btn {
+  font-family: "Inconsolata", monospace;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Sizes */
+.btn-small {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+.btn-medium {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+}
+
+.btn-large {
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+}
+
+/* Variants */
+.btn-primary {
+  background: #8400ff;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #6a00cc;
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #8400ff;
+}
+
+.btn-outline {
+  background: transparent;
+  color: #8400ff;
+  border: 1px solid #8400ff;
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: #8400ff;
+  color: white;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: white;
+  border: 1px solid transparent;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+}

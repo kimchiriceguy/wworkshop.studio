@@ -1,0 +1,100 @@
+.form-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.form-input-label {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.required {
+  color: #ff4444;
+}
+
+.form-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.form-input-container.has-icon.icon-left .form-input {
+  padding-left: 2.5rem;
+}
+
+.form-input-container.has-icon.icon-right .form-input {
+  padding-right: 2.5rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: #fff;
+  font-family: "Inconsolata", monospace;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #8400ff;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(132, 0, 255, 0.1);
+}
+
+.form-input-wrapper.is-focused .form-input {
+  border-color: #8400ff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.form-input-wrapper.has-error .form-input {
+  border-color: #ff4444;
+}
+
+.form-input-wrapper.is-disabled .form-input {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.form-input-icon {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.form-input-icon-left {
+  left: 0.75rem;
+}
+
+.form-input-icon-right {
+  right: 0.75rem;
+}
+
+.form-input-error {
+  color: #ff4444;
+  font-size: 0.85rem;
+  margin-top: -0.25rem;
+}
+
+.form-input-helper {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+  margin-top: -0.25rem;
+}
+

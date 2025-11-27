@@ -1,0 +1,69 @@
+.store-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.store-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(132, 0, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(132, 0, 255, 0.2);
+}
+
+.store-card-image {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: rgba(132, 0, 255, 0.1);
+}
+
+.store-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.store-card-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.store-card-name {
+  color: #8400ff;
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.store-card-address,
+.store-card-phone,
+.store-card-hours {
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.store-card-rating {
+  color: #ffd700;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.store-card-description {
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0.5rem 0 0 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+

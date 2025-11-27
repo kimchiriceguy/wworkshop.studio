@@ -1,0 +1,83 @@
+.wrapper {
+    width: 100%;
+    height: 70px;
+    padding: 0px;
+    background-color: black;
+    font-size: 12px;
+    white-space: nowrap;
+    user-select: none;
+    margin: 0;
+    padding: 0;
+    z-index: 100;
+    top: 0;
+    overflow: hidden;
+    position: fixed;
+    font-family: "Inconsolata", monospace;
+    animation: fadebg 1s ease forwards;
+    filter: contrast(1);
+    animation-delay: 1s;
+}
+
+.marquee-text {
+    overflow: clip;
+    transition: font-family 0.5s ease;
+    z-index: 100;
+    left: 300px;
+    filter: brightness(100);
+    animation: fadeColor 3s ease-in-out forwards;
+}
+
+@keyframes fadeColor {
+    from {
+        filter: brightness(100);
+    }
+
+    to {
+        filter: brightness(1);
+    }
+}
+
+.marquee-text-track {
+    display: flex;
+    gap: 1px;
+    width: max-content;
+    color: white;
+}
+
+.marquee-text-track h1 {
+    padding: 0.3rem 2.5rem;
+    color: rgb(93, 35, 255);
+    transition: color 0.3s ease;
+}
+
+.marquee-text-track h1.clicked {
+    color: var(--clicked-color);
+}
+
+
+.marquee-text-track h1:hover {
+    color: #ffffff;
+    cursor: crosshair;
+}
+
+
+@keyframes marqueemovetext {
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+.marquee-text-track:hover {
+    cursor: crosshair;
+}
+
+/* optional fadebg fallback (if needed) */
+@keyframes fadebg {
+    from {
+        background-color: rgba(0, 0, 0, 0);
+    }
+
+    to {
+        background-color: black;
+    }
+}
