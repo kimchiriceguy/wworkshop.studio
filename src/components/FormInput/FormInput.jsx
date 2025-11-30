@@ -16,7 +16,8 @@ const FormInput = ({
   disabled = false,
   className = '',
   icon,
-  iconPosition = 'left'
+  iconPosition = 'left',
+  rows
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -46,19 +47,35 @@ const FormInput = ({
         {icon && iconPosition === 'left' && (
           <span className="form-input-icon form-input-icon-left">{icon}</span>
         )}
-        <input
-          type={type}
-          id={name}
-          name={name}
-          value={value || ''}
-          placeholder={placeholder}
-          required={required}
-          disabled={disabled}
-          onChange={handleChange}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          className="form-input"
-        />
+        {type === 'textarea' ? (
+          <textarea
+            id={name}
+            name={name}
+            value={value || ''}
+            placeholder={placeholder}
+            required={required}
+            disabled={disabled}
+            onChange={handleChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            className="form-input"
+            rows={rows || 4}
+          />
+        ) : (
+          <input
+            type={type}
+            id={name}
+            name={name}
+            value={value || ''}
+            placeholder={placeholder}
+            required={required}
+            disabled={disabled}
+            onChange={handleChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            className="form-input"
+          />
+        )}
         {icon && iconPosition === 'right' && (
           <span className="form-input-icon form-input-icon-right">{icon}</span>
         )}

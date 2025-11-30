@@ -1,0 +1,55 @@
+.wrapper,
+.marquee-container {
+    width: 100%;
+    height: auto;
+    padding: 0;
+    background-color: transparent;
+    font-size: 12px;
+    white-space: nowrap;
+    user-select: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: "Inconsolata", monospace;
+}
+
+.marquee-text {
+    color: #8400ff;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    white-space: nowrap;
+    padding: 0 2.5rem;
+    display: inline-block;
+}
+
+.marquee-text-track h1.clicked {
+    color: var(--clicked-color);
+}
+
+
+.marquee-text-track h1:hover {
+    color: #ffffff;
+    cursor: crosshair;
+}
+
+
+@keyframes marqueemovetext {
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+.marquee-text-track:hover {
+    cursor: crosshair;
+}
+
+/* optional fadebg fallback (if needed) */
+@keyframes fadebg {
+    from {
+        background-color: rgba(0, 0, 0, 0);
+    }
+
+    to {
+        background-color: black;
+    }
+}

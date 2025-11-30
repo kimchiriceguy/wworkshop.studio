@@ -1,6 +1,6 @@
 import DocPage from './DocPage'
-import { Button } from '../../components'
-import '../../components/Button/Button.css'
+import { Button } from '../components'
+import '../components/Button/Button.css'
 
 const ButtonDoc = ({ onBack }) => {
   return (

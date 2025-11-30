@@ -1,0 +1,194 @@
+.home-page {
+    background: #0a0a0a;
+    color: #fff;
+    min-height: 100vh;
+}
+
+.marquee-banner {
+    background: #000;
+    border-bottom: 1px solid #8400ff40;
+    padding: 0.6rem 0;
+    overflow: hidden;
+    position: relative;
+    z-index: 10;
+    height: 70px;
+    display: flex;
+    align-items: center;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Hero Section */
+.hero-section {
+    position: relative;
+    width: 100%;
+    height: 80vh;
+    min-height: 500px;
+    overflow: hidden;
+}
+
+.hero-slide {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 2rem;
+}
+
+.hero-title {
+    font-size: 4rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.hero-subtitle {
+    font-size: 1.5rem;
+    color: #ccc;
+    margin-bottom: 2rem;
+}
+
+.hero-cta {
+    font-size: 1.2rem;
+    padding: 1rem 2rem;
+}
+
+/* About Section */
+.about-section {
+    padding: 4rem 0;
+    background: #0f0f0f;
+}
+
+.about-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+}
+
+.about-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    color: #8400ff;
+    margin-bottom: 1rem;
+    letter-spacing: 2px;
+}
+
+.section-text {
+    color: #ccc;
+    line-height: 1.8;
+    font-size: 1.05rem;
+}
+
+.about-image img {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(132, 0, 255, 0.2);
+}
+
+/* Barbers Section */
+.barbers-section {
+    padding: 4rem 0;
+    background: #0a0a0a;
+}
+
+.barbers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+/* Gallery Section */
+.gallery-section {
+    padding: 4rem 0;
+    background: #0f0f0f;
+}
+
+/* CTA Section */
+.cta-section {
+    padding: 6rem 0;
+    background: linear-gradient(135deg, #8400ff20 0%, #0a0a0a 100%);
+    text-align: center;
+}
+
+.cta-title {
+    font-size: 3rem;
+    color: #8400ff;
+    margin-bottom: 1rem;
+    letter-spacing: 3px;
+}
+
+.cta-text {
+    font-size: 1.2rem;
+    color: #ccc;
+    margin-bottom: 2rem;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+    }
+
+    .about-content {
+        grid-template-columns: 1fr;
+    }
+
+    .barbers-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+}

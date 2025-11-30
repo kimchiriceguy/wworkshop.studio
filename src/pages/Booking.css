@@ -1,0 +1,102 @@
+.booking-page {
+    background: #0a0a0a;
+    color: #fff;
+    min-height: 100vh;
+    padding: 2rem 0;
+}
+
+.marquee-banner {
+    background: #000;
+    border-bottom: 1px solid #8400ff40;
+    padding: 0.6rem 0;
+    overflow: hidden;
+    position: relative;
+    z-index: 10;
+    height: 70px;
+    display: flex;
+    align-items: center;
+}
+
+.page-title {
+    font-size: 3rem;
+    color: #8400ff;
+    text-align: center;
+    margin-bottom: 3rem;
+    letter-spacing: 3px;
+}
+
+.booking-form {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.form-section {
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: #0f0f0f;
+    border-radius: 8px;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    color: #8400ff;
+    margin-bottom: 1.5rem;
+}
+
+.time-slots {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+}
+
+.time-slot {
+    padding: 1rem;
+    background: #1a1a1a;
+    border: 1px solid #8400ff40;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.time-slot:hover {
+    border-color: #8400ff;
+    background: #8400ff20;
+}
+
+.time-slot.selected {
+    background: #8400ff;
+    border-color: #8400ff;
+    color: #000;
+    font-weight: bold;
+}
+
+.form-actions {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.confirm-details {
+    margin-bottom: 2rem;
+}
+
+.confirm-details p {
+    margin-bottom: 0.5rem;
+    color: #ccc;
+}
+
+.confirm-details strong {
+    color: #8400ff;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+@media (max-width: 768px) {
+    .time-slots {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+}
