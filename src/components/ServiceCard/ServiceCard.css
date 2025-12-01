@@ -11,15 +11,22 @@
 }
 
 .service-modal:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px) scale(1.02);
   border-color: #8400ff;
-  background: rgba(132, 0, 255, 0.1);
+  background: rgba(132, 0, 255, 0.2);
+  box-shadow: 0 8px 24px rgba(132, 0, 255, 0.4);
 }
 
 .service-modal h2 {
   margin: 0 0 1rem 0;
   font-size: 1.5rem;
   color: white;
+  transition: all 0.3s ease;
+}
+
+.service-modal:hover h2 {
+  color: #8400ff;
+  text-shadow: 0 0 15px rgba(132, 0, 255, 0.6);
 }
 
 .service-modal p {

@@ -2,18 +2,7 @@
     background: #0a0a0a;
     color: #fff;
     min-height: 100vh;
-}
-
-.marquee-banner {
-    background: #000;
-    border-bottom: 1px solid #8400ff40;
-    padding: 0.6rem 0;
-    overflow: hidden;
-    position: relative;
-    z-index: 10;
-    height: 70px;
-    display: flex;
-    align-items: center;
+    padding-top: 0;
 }
 
 .container {
@@ -22,13 +11,193 @@
     padding: 0 2rem;
 }
 
-/* Hero Section */
-.hero-section {
+/* Hero Banner Section - V's Barbershop Style */
+.hero-banner {
     position: relative;
     width: 100%;
-    height: 80vh;
-    min-height: 500px;
-    overflow: hidden;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 50%, #0a0a0a 100%);
+    padding: 8rem 2rem;
+    text-align: center;
+    animation: fadeIn 1s ease-in;
+}
+
+.hero-banner-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.hero-main-title {
+    font-size: 4.5rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 2rem;
+    letter-spacing: 4px;
+    line-height: 1.2;
+    text-transform: uppercase;
+    animation: slideInDown 1s ease-out;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-main-subtitle {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.8;
+    margin-bottom: 3rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    animation: fadeInUp 1s ease-out 0.3s both;
+}
+
+.hero-cta-group {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeInUp 1s ease-out 0.6s both;
+}
+
+.hero-cta-large {
+    padding: 1.2rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    min-width: 220px;
+}
+
+/* Mission Section */
+.mission-section {
+    padding: 6rem 0;
+    background: #0f0f0f;
+    border-top: 1px solid rgba(132, 0, 255, 0.2);
+    border-bottom: 1px solid rgba(132, 0, 255, 0.2);
+}
+
+.mission-content {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.mission-title {
+    font-size: 2.8rem;
+    color: #8400ff;
+    margin-bottom: 2rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.mission-text {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.9;
+    margin-bottom: 2.5rem;
+}
+
+.mission-cta {
+    padding: 1rem 2.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+/* Categories Section */
+.categories-section {
+    padding: 5rem 0;
+    background: #0a0a0a;
+}
+
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.category-card {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(132, 0, 255, 0.2);
+}
+
+.category-card:hover {
+    background: rgba(132, 0, 255, 0.1);
+    border-color: #8400ff;
+    transform: translateY(-5px);
+}
+
+.category-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.category-card .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+}
+
+.category-card .card-description {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Products Section */
+.products-section {
+    padding: 5rem 0;
+    background: #0f0f0f;
+}
+
+.section-title-center {
+    font-size: 2.5rem;
+    color: #8400ff;
+    text-align: center;
+    margin-bottom: 3rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.products-grid-home {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.products-cta {
+    text-align: center;
+    margin-top: 3rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .hero-slide {
@@ -72,74 +241,72 @@
     margin-bottom: 1rem;
     color: #fff;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    animation: slideInLeft 0.8s ease-out;
+    background: linear-gradient(135deg, #fff 0%, #8400ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .hero-subtitle {
     font-size: 1.5rem;
     color: #ccc;
     margin-bottom: 2rem;
+    animation: slideInRight 0.8s ease-out 0.2s both;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .hero-cta {
     font-size: 1.2rem;
     padding: 1rem 2rem;
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(132, 0, 255, 0.4);
 }
 
-/* About Section */
-.about-section {
-    padding: 4rem 0;
-    background: #0f0f0f;
+.hero-cta:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(132, 0, 255, 0.6);
 }
 
-.about-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    align-items: center;
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.about-text {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.section-title {
-    font-size: 2.5rem;
-    color: #8400ff;
-    margin-bottom: 1rem;
-    letter-spacing: 2px;
-}
-
-.section-text {
-    color: #ccc;
-    line-height: 1.8;
-    font-size: 1.05rem;
-}
-
-.about-image img {
-    width: 100%;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(132, 0, 255, 0.2);
-}
-
-/* Barbers Section */
-.barbers-section {
-    padding: 4rem 0;
-    background: #0a0a0a;
-}
-
-.barbers-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
-}
 
 /* Gallery Section */
 .gallery-section {
-    padding: 4rem 0;
-    background: #0f0f0f;
+    padding: 5rem 0;
+    background: #0a0a0a;
+    border-top: 1px solid rgba(132, 0, 255, 0.2);
 }
 
 /* CTA Section */
@@ -147,6 +314,24 @@
     padding: 6rem 0;
     background: linear-gradient(135deg, #8400ff20 0%, #0a0a0a 100%);
     text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(132, 0, 255, 0.1) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 .cta-title {
@@ -154,12 +339,27 @@
     color: #8400ff;
     margin-bottom: 1rem;
     letter-spacing: 3px;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 0 20px rgba(132, 0, 255, 0.5);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        text-shadow: 0 0 20px rgba(132, 0, 255, 0.5);
+    }
+    50% {
+        text-shadow: 0 0 30px rgba(132, 0, 255, 0.8);
+    }
 }
 
 .cta-text {
     font-size: 1.2rem;
     color: #ccc;
     margin-bottom: 2rem;
+    position: relative;
+    z-index: 1;
 }
 
 .cta-buttons {
@@ -167,24 +367,43 @@
     gap: 1.5rem;
     justify-content: center;
     flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
 }
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
-    .hero-title {
+    .hero-main-title {
         font-size: 2.5rem;
+        letter-spacing: 2px;
     }
 
-    .hero-subtitle {
-        font-size: 1.2rem;
+    .hero-main-subtitle {
+        font-size: 1rem;
     }
 
-    .about-content {
-        grid-template-columns: 1fr;
+    .hero-cta-group {
+        flex-direction: column;
+        align-items: center;
     }
 
-    .barbers-grid {
-        grid-template-columns: 1fr;
+    .hero-cta-large {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .mission-title {
+        font-size: 2rem;
+    }
+
+    .categories-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .products-grid-home {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
     }
 
     .cta-buttons {

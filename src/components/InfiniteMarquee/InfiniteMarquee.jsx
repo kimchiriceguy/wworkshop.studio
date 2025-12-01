@@ -70,7 +70,9 @@ const InfiniteMarquee = ({
 
     return (
         <div ref={containerRef} className={className} {...rest}>
-            {children}
+            <span style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
+                {children}
+            </span>
         </div>
     );
 };

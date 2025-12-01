@@ -2,19 +2,15 @@
     background: #0a0a0a;
     color: #fff;
     min-height: 100vh;
-    padding: 2rem 0;
+    padding: 0;
+    animation: fadeIn 0.6s ease-in;
+    padding-top: 0;
 }
 
-.marquee-banner {
-    background: #000;
-    border-bottom: 1px solid #8400ff40;
-    padding: 0.6rem 0;
-    overflow: hidden;
-    position: relative;
-    z-index: 10;
-    height: 70px;
-    display: flex;
-    align-items: center;
+.admin-page .container {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .admin-header {

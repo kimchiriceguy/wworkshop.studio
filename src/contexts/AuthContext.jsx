@@ -1,5 +1,6 @@
-// Auth context - Firebase ready
+// Auth context - Firebase integrated
 import { createContext, useContext, useState, useEffect } from 'react';
+import { signIn, signUp, logOut, getUserData, onAuthStateChange } from '../firebase/services/authService';
 
 const AuthContext = createContext(null);
 
@@ -8,62 +9,104 @@ export const AuthProvider = ({ children }) => {
     const [isAdmin, setIsAdmin] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    // TODO: Replace with Firebase auth
     useEffect(() => {
-        // Check for stored auth
-        const storedUser = localStorage.getItem('user');
-        const storedAdmin = localStorage.getItem('isAdmin');
+        // Subscribe to auth state changes
+        const unsubscribe = onAuthStateChange(async (firebaseUser) => {
+            if (firebaseUser) {
+                // Get user data from Firestore
+                const { data: userData, error } = await getUserData(firebaseUser.uid);
+                if (userData) {
+                    setUser({
+                        uid: firebaseUser.uid,
+                        email: firebaseUser.email,
+                        displayName: firebaseUser.displayName || userData.displayName || '',
+                        ...userData
+                    });
+                    setIsAdmin(userData.isAdmin || false);
+                } else {
+                    // Fallback to Firebase Auth user if Firestore data not found
+                    setUser({
+                        uid: firebaseUser.uid,
+                        email: firebaseUser.email,
+                        displayName: firebaseUser.displayName || ''
+                    });
+                    setIsAdmin(false);
+                }
+            } else {
+                setUser(null);
+                setIsAdmin(false);
+            }
+            setLoading(false);
+        });
 
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-            setIsAdmin(storedAdmin === 'true');
-        }
-
-        setLoading(false);
+        return () => unsubscribe();
     }, []);
 
     const login = async (email, password) => {
-        // TODO: Replace with Firebase auth
-        // For now, simple mock login
-        const mockUser = {
-            uid: 'mock-uid',
-            email: email,
-            displayName: email.split('@')[0]
-        };
+        try {
+            const { user: firebaseUser, error } = await signIn(email, password);
+            if (error) {
+                return { success: false, error };
+            }
 
-        // Check if admin (simple check for demo)
-        const admin = email.includes('admin') || email.includes('@wworkshop.studio');
+            // Get user data from Firestore
+            const { data: userData } = await getUserData(firebaseUser.uid);
+            if (userData) {
+                setUser({
+                    uid: firebaseUser.uid,
+                    email: firebaseUser.email,
+                    displayName: firebaseUser.displayName || userData.displayName || '',
+                    ...userData
+                });
+                setIsAdmin(userData.isAdmin || false);
+            } else {
+                setUser({
+                    uid: firebaseUser.uid,
+                    email: firebaseUser.email,
+                    displayName: firebaseUser.displayName || ''
+                });
+                setIsAdmin(false);
+            }
 
-        setUser(mockUser);
-        setIsAdmin(admin);
-        localStorage.setItem('user', JSON.stringify(mockUser));
-        localStorage.setItem('isAdmin', admin.toString());
-
-        return { success: true, user: mockUser, isAdmin: admin };
+            return { success: true, user: firebaseUser };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
     };
 
-    const signup = async (email, password, displayName) => {
-        // TODO: Replace with Firebase auth
-        const mockUser = {
-            uid: 'mock-uid-' + Date.now(),
-            email: email,
-            displayName: displayName || email.split('@')[0]
-        };
+    const signup = async (email, password, displayName, phone = '') => {
+        try {
+            const { user: firebaseUser, error } = await signUp(email, password, displayName, phone);
+            if (error) {
+                return { success: false, error };
+            }
 
-        setUser(mockUser);
-        setIsAdmin(false);
-        localStorage.setItem('user', JSON.stringify(mockUser));
-        localStorage.setItem('isAdmin', 'false');
+            // User data is already created in Firestore by signUp service
+            const { data: userData } = await getUserData(firebaseUser.uid);
+            if (userData) {
+                setUser({
+                    uid: firebaseUser.uid,
+                    email: firebaseUser.email,
+                    displayName: firebaseUser.displayName || userData.displayName || '',
+                    ...userData
+                });
+                setIsAdmin(userData.isAdmin || false);
+            }
 
-        return { success: true, user: mockUser };
+            return { success: true, user: firebaseUser };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
     };
 
     const logout = async () => {
-        // TODO: Replace with Firebase auth
-        setUser(null);
-        setIsAdmin(false);
-        localStorage.removeItem('user');
-        localStorage.removeItem('isAdmin');
+        try {
+            await logOut();
+            setUser(null);
+            setIsAdmin(false);
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
     };
 
     const value = {

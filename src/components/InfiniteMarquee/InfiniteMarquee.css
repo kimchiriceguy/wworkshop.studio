@@ -1,25 +1,20 @@
 .wrapper,
 .marquee-container {
     width: 100%;
-    height: auto;
+    height: 100%;
     padding: 0;
     background-color: transparent;
-    font-size: 12px;
+    font-size: 0.9rem;
     white-space: nowrap;
     user-select: none;
     margin: 0;
-    padding: 0;
     overflow: hidden;
     font-family: "Inconsolata", monospace;
-}
-
-.marquee-text {
+    display: flex;
+    align-items: center;
     color: #8400ff;
-    font-size: 0.9rem;
     letter-spacing: 2px;
-    white-space: nowrap;
-    padding: 0 2.5rem;
-    display: inline-block;
+    font-weight: 500;
 }
 
 .marquee-text-track h1.clicked {

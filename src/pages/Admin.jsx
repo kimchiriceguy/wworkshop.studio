@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import InfiniteMarquee from '../components/InfiniteMarquee/InfiniteMarquee';
-import '../components/InfiniteMarquee/InfiniteMarquee.css';
+import { getBlog, saveBlog } from '../firebase/services/blogService';
+import { getAllAppointments, updateAppointment, deleteAppointment } from '../firebase/services/appointmentService';
+import { getAllProducts, createProduct, updateProduct, deleteProduct } from '../firebase/services/productService';
+import { getAllOrders, updateOrder, deleteOrder } from '../firebase/services/orderService';
+import { getAllUsers, updateUser, deleteUser } from '../firebase/services/userService';
 import Button from '../components/Button/Button';
 import FormInput from '../components/FormInput/FormInput';
 import Modal from '../components/Modal/Modal';
 import Dropdown from '../components/Dropdown/Dropdown';
+import Marquee from '../components/Marquee/Marquee';
 import '../components/Button/Button.css';
 import '../components/FormInput/FormInput.css';
 import '../components/Modal/Modal.css';
 import '../components/Dropdown/Dropdown.css';
+import '../components/Marquee/Marquee.css';
 import './Admin.css';
 
 function Admin() {
@@ -54,27 +59,39 @@ function Admin() {
             return;
         }
 
-        // TODO: Replace with Firebase fetch
-        const storedBlog = localStorage.getItem('aboutBlog');
-        if (storedBlog) {
-            const data = JSON.parse(storedBlog);
-            setBlogContent(data.content || '');
-        }
+        const fetchAllData = async () => {
+            // Fetch blog
+            const { data: blogData } = await getBlog('main');
+            if (blogData) {
+                setBlogContent(blogData.content || '');
+            }
 
-        const storedAppointments = localStorage.getItem('appointments');
-        if (storedAppointments) {
-            setAppointments(JSON.parse(storedAppointments));
-        }
+            // Fetch appointments
+            const { data: appointmentsData } = await getAllAppointments();
+            if (appointmentsData) {
+                setAppointments(appointmentsData);
+            }
 
-        const storedProducts = localStorage.getItem('products');
-        if (storedProducts) {
-            setProducts(JSON.parse(storedProducts));
-        }
+            // Fetch products
+            const { data: productsData } = await getAllProducts();
+            if (productsData) {
+                setProducts(productsData);
+            }
 
-        const storedUsers = localStorage.getItem('users');
-        if (storedUsers) {
-            setUsers(JSON.parse(storedUsers));
-        }
+            // Fetch orders
+            const { data: ordersData } = await getAllOrders();
+            if (ordersData) {
+                setOrders(ordersData);
+            }
+
+            // Fetch users
+            const { data: usersData } = await getAllUsers();
+            if (usersData) {
+                setUsers(usersData);
+            }
+        };
+
+        fetchAllData();
     }, [isAdmin, navigate]);
 
     // Blog functions
@@ -84,13 +101,12 @@ function Admin() {
         setShowModal(true);
     };
 
-    const handleSaveBlog = () => {
-        // TODO: Replace with Firebase save
-        const data = {
-            content: editingItem.content,
-            updatedAt: new Date().toISOString()
-        };
-        localStorage.setItem('aboutBlog', JSON.stringify(data));
+    const handleSaveBlog = async () => {
+        const { error } = await saveBlog('main', editingItem.content, 'About WWORKSHOP STUDIO');
+        if (error) {
+            alert('Error saving blog: ' + error);
+            return;
+        }
         setBlogContent(editingItem.content);
         setShowModal(false);
     };
@@ -102,20 +118,26 @@ function Admin() {
         setShowModal(true);
     };
 
-    const handleDeleteAppointment = (id) => {
+    const handleDeleteAppointment = async (id) => {
         if (window.confirm('Are you sure you want to delete this appointment?')) {
-            const updated = appointments.filter(apt => apt.id !== id);
-            setAppointments(updated);
-            localStorage.setItem('appointments', JSON.stringify(updated));
+            const { error } = await deleteAppointment(id);
+            if (error) {
+                alert('Error deleting appointment: ' + error);
+                return;
+            }
+            setAppointments(appointments.filter(apt => apt.id !== id));
         }
     };
 
-    const handleSaveAppointment = () => {
-        const updated = appointments.map(apt =>
+    const handleSaveAppointment = async () => {
+        const { error } = await updateAppointment(editingItem.id, editingItem);
+        if (error) {
+            alert('Error updating appointment: ' + error);
+            return;
+        }
+        setAppointments(appointments.map(apt =>
             apt.id === editingItem.id ? editingItem : apt
-        );
-        setAppointments(updated);
-        localStorage.setItem('appointments', JSON.stringify(updated));
+        ));
         setShowModal(false);
     };
 
@@ -139,34 +161,44 @@ function Admin() {
         setShowModal(true);
     };
 
-    const handleDeleteProduct = (id) => {
+    const handleDeleteProduct = async (id) => {
         if (window.confirm('Are you sure you want to delete this product?')) {
-            const updated = products.filter(prod => prod.id !== id);
-            setProducts(updated);
-            localStorage.setItem('products', JSON.stringify(updated));
+            const { error } = await deleteProduct(id);
+            if (error) {
+                alert('Error deleting product: ' + error);
+                return;
+            }
+            setProducts(products.filter(prod => prod.id !== id));
         }
     };
 
-    const handleSaveProduct = () => {
+    const handleSaveProduct = async () => {
+        const productData = {
+            name: productForm.name,
+            price: parseFloat(productForm.price),
+            description: productForm.description,
+            image: productForm.image,
+            isAvailable: true
+        };
+
         if (editingItem) {
             // Update existing
-            const updated = products.map(prod =>
-                prod.id === editingItem.id
-                    ? { ...editingItem, ...productForm, price: parseFloat(productForm.price) }
-                    : prod
-            );
-            setProducts(updated);
-            localStorage.setItem('products', JSON.stringify(updated));
+            const { error } = await updateProduct(editingItem.id, productData);
+            if (error) {
+                alert('Error updating product: ' + error);
+                return;
+            }
+            setProducts(products.map(prod =>
+                prod.id === editingItem.id ? { ...prod, ...productData } : prod
+            ));
         } else {
             // Add new
-            const newProduct = {
-                id: Date.now(),
-                ...productForm,
-                price: parseFloat(productForm.price)
-            };
-            const updated = [...products, newProduct];
-            setProducts(updated);
-            localStorage.setItem('products', JSON.stringify(updated));
+            const { id, error } = await createProduct(productData);
+            if (error) {
+                alert('Error creating product: ' + error);
+                return;
+            }
+            setProducts([...products, { id, ...productData }]);
         }
         setShowModal(false);
     };
@@ -183,7 +215,7 @@ function Admin() {
         setModalType('user');
         setEditingItem(user);
         setUserForm({
-            username: user.username || '',
+            username: user.displayName || user.username || '',
             email: user.email || '',
             phone: user.phone || '',
             password: '' // Don't show password
@@ -191,36 +223,54 @@ function Admin() {
         setShowModal(true);
     };
 
-    const handleDeleteUser = (id) => {
+    const handleDeleteUser = async (user) => {
         if (window.confirm('Are you sure you want to delete this user?')) {
-            const updated = users.filter(u => u.id !== id);
-            setUsers(updated);
-            localStorage.setItem('users', JSON.stringify(updated));
+            const userId = user.id || user.uid;
+            const { error } = await deleteUser(userId);
+            if (error) {
+                alert('Error deleting user: ' + error);
+                return;
+            }
+            setUsers(users.filter(u => (u.id !== userId && u.uid !== userId)));
         }
     };
 
-    const handleSaveUser = () => {
+    const handleSaveUser = async () => {
+        const userData = {
+            displayName: userForm.username,
+            email: userForm.email,
+            phone: userForm.phone
+        };
+
         if (editingItem) {
-            // Update existing
-            const updated = users.map(u =>
-                u.id === editingItem.id
-                    ? { ...editingItem, ...userForm, ...(userForm.password && { password: userForm.password }) }
-                    : u
-            );
-            setUsers(updated);
-            localStorage.setItem('users', JSON.stringify(updated));
+            // Update existing - use uid if id doesn't exist
+            const userId = editingItem.id || editingItem.uid;
+            const { error } = await updateUser(userId, userData);
+            if (error) {
+                alert('Error updating user: ' + error);
+                return;
+            }
+            setUsers(users.map(u =>
+                (u.id === userId || u.uid === userId) ? { ...u, ...userData } : u
+            ));
         } else {
-            // Add new
-            const newUser = {
-                id: Date.now(),
-                ...userForm,
-                createdAt: new Date().toISOString()
-            };
-            const updated = [...users, newUser];
-            setUsers(updated);
-            localStorage.setItem('users', JSON.stringify(updated));
+            // Note: Creating users should be done through Firebase Auth, not directly
+            alert('User creation should be done through the sign-up process. This feature is for updating existing users.');
+            return;
         }
         setShowModal(false);
+    };
+
+    // Order functions
+    const handleDeleteOrder = async (orderId) => {
+        if (window.confirm('Are you sure you want to delete this order?')) {
+            const { error } = await deleteOrder(orderId);
+            if (error) {
+                alert('Error deleting order: ' + error);
+                return;
+            }
+            setOrders(orders.filter(order => order.id !== orderId));
+        }
     };
 
     if (!isAdmin) {
@@ -229,16 +279,7 @@ function Admin() {
 
     return (
         <div className="admin-page">
-            <div className="marquee-banner">
-        <InfiniteMarquee
-          speed={25000}
-          direction="right"
-          gap="15px"
-        >
-          <span className="marquee-text">BARBERSHOP / SCHOOL / CONSULTANCY / </span>
-          <span className="marquee-text">BARBERSHOP / SCHOOL / CONSULTANCY / </span>
-        </InfiniteMarquee>
-      </div>
+            <Marquee />
 
             <div className="container">
                 <div className="admin-header">
@@ -322,11 +363,12 @@ function Admin() {
                                         {appointments.map((apt) => (
                                             <tr key={apt.id}>
                                                 <td>{apt.id}</td>
-                                                <td>{apt.customerName}</td>
-                                                <td>{apt.barber}</td>
-                                                <td>{apt.service}</td>
-                                                <td>{apt.date}</td>
-                                                <td>{apt.time}</td>
+                                                <td>{apt.customerName || '-'}</td>
+                                                <td>{apt.barberName || apt.barber || '-'}</td>
+                                                <td>{apt.serviceName || apt.service || '-'}</td>
+                                                <td>{apt.date?.toDate ? new Date(apt.date.toDate()).toLocaleDateString() : apt.date || '-'}</td>
+                                                <td>{apt.time || '-'}</td>
+                                                <td>{apt.status || 'confirmed'}</td>
                                                 <td>
                                                     <Button
                                                         variant="outline"
@@ -400,7 +442,45 @@ function Admin() {
                     {activeTab === 'orders' && (
                         <div className="tab-content">
                             <h2>Orders ({orders.length})</h2>
-                            <p className="empty-state">Orders feature coming soon. TODO: Implement with Firebase.</p>
+                            <div className="table-container">
+                                <table className="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Order ID</th>
+                                            <th>User</th>
+                                            <th>Items</th>
+                                            <th>Total</th>
+                                            <th>Status</th>
+                                            <th>Date</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {orders.map((order) => (
+                                            <tr key={order.id}>
+                                                <td>{order.id}</td>
+                                                <td>{order.userId}</td>
+                                                <td>{order.items?.length || 0} items</td>
+                                                <td>${order.total?.toFixed(2) || '0.00'}</td>
+                                                <td>{order.status || 'pending'}</td>
+                                                <td>{order.createdAt?.toDate ? new Date(order.createdAt.toDate()).toLocaleDateString() : '-'}</td>
+                                                <td>
+                                                    <Button
+                                                        variant="outline"
+                                                        onClick={() => handleDeleteOrder(order.id)}
+                                                        className="action-button delete"
+                                                    >
+                                                        DELETE
+                                                    </Button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                                {orders.length === 0 && (
+                                    <p className="empty-state">No orders found.</p>
+                                )}
+                            </div>
                         </div>
                     )}
 
@@ -428,11 +508,11 @@ function Admin() {
                                     <tbody>
                                         {users.map((user) => (
                                             <tr key={user.id}>
-                                                <td>{user.id}</td>
-                                                <td>{user.username}</td>
-                                                <td>{user.email}</td>
-                                                <td>{user.phone}</td>
-                                                <td>{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '-'}</td>
+                                                <td>{user.id || user.uid}</td>
+                                                <td>{user.displayName || user.username || '-'}</td>
+                                                <td>{user.email || '-'}</td>
+                                                <td>{user.phone || '-'}</td>
+                                                <td>{user.createdAt?.toDate ? new Date(user.createdAt.toDate()).toLocaleDateString() : user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '-'}</td>
                                                 <td>
                                                     <Button
                                                         variant="outline"
@@ -443,7 +523,7 @@ function Admin() {
                                                     </Button>
                                                     <Button
                                                         variant="outline"
-                                                        onClick={() => handleDeleteUser(user.id)}
+                                                        onClick={() => handleDeleteUser(user)}
                                                         className="action-button delete"
                                                     >
                                                         DELETE

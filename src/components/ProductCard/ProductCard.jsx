@@ -40,8 +40,10 @@ const ProductCard = ({
       data-types={types.length > 0 ? JSON.stringify(types) : undefined}
     >
       <img src={image} alt={name} className="product-image" />
-      <h2 className="product-name">{name}</h2>
-      <p className="product-price">Price: {price}</p>
+      <div className="product-info">
+        <h2 className="product-name">{name}</h2>
+        <p className="product-price">{price}</p>
+      </div>
     </div>
   );
 };

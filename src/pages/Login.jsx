@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import InfiniteMarquee from '../components/InfiniteMarquee/InfiniteMarquee';
-import '../components/InfiniteMarquee/InfiniteMarquee.css';
 import Button from '../components/Button/Button';
 import FormInput from '../components/FormInput/FormInput';
+import Marquee from '../components/Marquee/Marquee';
 import '../components/Button/Button.css';
 import '../components/FormInput/FormInput.css';
+import '../components/Marquee/Marquee.css';
 import './Login.css';
 
 function Login() {
@@ -54,16 +54,7 @@ function Login() {
 
     return (
         <div className="login-page">
-            <div className="marquee-banner">
-                <InfiniteMarquee
-                    speed={25000}
-                    direction="right"
-                    gap="15px"
-                >
-                    <span className="marquee-text">BARBERSHOP / SCHOOL / CONSULTANCY / </span>
-                    <span className="marquee-text">BARBERSHOP / SCHOOL / CONSULTANCY / </span>
-                </InfiniteMarquee>
-            </div>
+            <Marquee />
 
             <div className="login-container">
                 <div className="login-card">

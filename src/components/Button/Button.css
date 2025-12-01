@@ -39,8 +39,9 @@
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #6a00cc;
-  transform: translateY(-2px);
+  background: #9d2aff;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(132, 0, 255, 0.5);
 }
 
 .btn-secondary {
@@ -50,8 +51,10 @@
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(132, 0, 255, 0.2);
   border-color: #8400ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(132, 0, 255, 0.3);
 }
 
 .btn-outline {
@@ -63,6 +66,8 @@
 .btn-outline:hover:not(:disabled) {
   background: #8400ff;
   color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(132, 0, 255, 0.4);
 }
 
 .btn-ghost {

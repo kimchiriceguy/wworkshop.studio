@@ -3,18 +3,7 @@
     color: #fff;
     min-height: 100vh;
     padding: 2rem 0;
-}
-
-.marquee-banner {
-    background: #000;
-    border-bottom: 1px solid #8400ff40;
-    padding: 0.6rem 0;
-    overflow: hidden;
-    position: relative;
-    z-index: 10;
-    height: 70px;
-    display: flex;
-    align-items: center;
+    animation: fadeIn 0.6s ease-in;
 }
 
 .about-header {
@@ -76,10 +65,17 @@
 }
 
 .info-card {
-    background: #0f0f0f;
+    background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
     padding: 2rem;
     border-radius: 8px;
     border: 1px solid #8400ff40;
+    transition: all 0.3s ease;
+}
+
+.info-card:hover {
+    border-color: #8400ff;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(132, 0, 255, 0.3);
 }
 
 .info-card h3 {
@@ -103,6 +99,12 @@
     gap: 1rem;
     justify-content: flex-end;
     margin-top: 1rem;
+}
+
+.about-cta {
+    text-align: center;
+    margin-top: 3rem;
+    padding: 2rem 0;
 }
 
 @media (max-width: 768px) {
