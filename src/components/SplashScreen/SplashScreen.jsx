@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './SplashScreen.css';
 
-const SplashScreen = ({ 
-  videoSrc, 
+const SplashScreen = ({
+  videoSrc,
   onComplete,
   fadeOutDuration = 1000,
   maxWaitTime = 3000,
@@ -15,7 +15,7 @@ const SplashScreen = ({
 
   useEffect(() => {
     const hasShown = useSessionStorage && sessionStorage.getItem('splashShown');
-    
+
     if (hasShown) {
       setIsVisible(false);
       setIsHidden(true);
@@ -67,11 +67,11 @@ const SplashScreen = ({
 
   return (
     <div className={`splash ${isFading ? 'fade-out' : ''} ${isHidden ? 'hidden' : ''}`}>
-      <video 
+      <video
         id="splashscreen"
         ref={videoRef}
-        autoPlay 
-        muted 
+        autoPlay
+        muted
         playsInline
       >
         <source src={videoSrc} type="video/mp4" />

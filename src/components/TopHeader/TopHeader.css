@@ -1,0 +1,99 @@
+.top-header {
+    margin-top: 4.2%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin-left: -0.1%;
+    height: 70px;
+    width: 20%;
+    background: color-mix(in srgb, var(--header-bg) calc(var(--header-bg-opacity) * 100%), transparent);
+    /* border-bottom: 1px solid color-mix(in srgb, var(--header-border) calc(var(--header-border-opacity) * %), transparent); */
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    padding: 0 2rem;
+    /* backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); */
+}
+
+@media (prefers-color-scheme: dark) {
+    .top-header {
+        background: color-mix(in srgb, var(--header-bg-dark) calc(var(--header-bg-opacity-dark) * 100%), transparent);
+        border-bottom-color: color-mix(in srgb, var(--header-border-dark) calc(var(--header-border-opacity-dark) * 100%), transparent);
+    }
+}
+
+.top-header-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+.top-header-brand:hover {
+    opacity: 0.8;
+    cursor: crosshair;
+}
+
+.top-header-logo {
+    height: 110px;
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.top-header-logo:hover {
+    animation: wiggle 0.4s ease-in-out;
+}
+
+@keyframes wiggle {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(3deg);
+    }
+
+    50% {
+        transform: rotate(-3deg);
+    }
+
+    75% {
+        transform: rotate(2deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+.top-header-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: hsl(240 5.9% 10%);
+    letter-spacing: -0.025em;
+}
+
+@media (prefers-color-scheme: dark) {
+    .top-header-name {
+        color: hsl(0 0% 98%);
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .top-header {
+        padding: 0 1rem;
+    }
+
+    .top-header-name {
+        font-size: 1.125rem;
+    }
+
+    .top-header-logo {
+        height: 32px;
+    }
+}

@@ -5,10 +5,14 @@ import ProductCard from '../components/ProductCard/ProductCard';
 import SearchBar from '../components/SearchBar/SearchBar';
 import Button from '../components/Button/Button';
 import Marquee from '../components/Marquee/Marquee';
+import TopHeader from '../components/TopHeader/TopHeader';
+import Sidebar from '../components/Sidebar/Sidebar';
 import '../components/ProductCard/ProductCard.css';
 import '../components/SearchBar/SearchBar.css';
 import '../components/Button/Button.css';
 import '../components/Marquee/Marquee.css';
+import '../components/TopHeader/TopHeader.css';
+import '../components/Sidebar/Sidebar.css';
 import './Shop.css';
 
 function Shop({ addToCart }) {
@@ -17,59 +21,62 @@ function Shop({ addToCart }) {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    // Placeholder products
+    const placeholderProducts = [
+        {
+            id: 'prod-1',
+            name: 'Lorem Ipsum',
+            price: 25.99,
+            image: '/assets/shop/prod1/1.jpg',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+        },
+        {
+            id: 'prod-2',
+            name: 'Dolor Sit',
+            price: 19.99,
+            image: '/assets/shop/prod2/1.jpg',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+        },
+        {
+            id: 'prod-3',
+            name: 'Amet Consectetur',
+            price: 15.99,
+            image: '/assets/shop/prod3/1.jpg',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+        },
+        {
+            id: 'prod-4',
+            name: 'Adipiscing Elit',
+            price: 22.99,
+            image: '/assets/shop/prod1/1.jpg',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+        },
+        {
+            id: 'prod-5',
+            name: 'Sed Eiusmod',
+            price: 18.99,
+            image: '/assets/shop/prod2/1.jpg',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+        },
+        {
+            id: 'prod-6',
+            name: 'Tempor Incididunt',
+            price: 29.99,
+            image: '/assets/shop/prod3/1.jpg',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+        }
+    ];
+
     useEffect(() => {
         const fetchProducts = async () => {
             setLoading(true);
             const { data, error } = await getAllProducts();
-            if (error) {
-                console.error('Error fetching products:', error);
-                // Fallback to default products if Firebase fails
-                setProducts([
-                    {
-                        id: 1,
-                        name: 'Lorem Ipsum',
-                        price: 25.99,
-                        image: '/assets/shop/prod1/1.jpg',
-                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-                    },
-                    {
-                        id: 2,
-                        name: 'Dolor Sit',
-                        price: 19.99,
-                        image: '/assets/shop/prod2/1.jpg',
-                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-                    },
-                    {
-                        id: 3,
-                        name: 'Amet Consectetur',
-                        price: 15.99,
-                        image: '/assets/shop/prod3/1.jpg',
-                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-                    },
-                    {
-                        id: 4,
-                        name: 'Adipiscing Elit',
-                        price: 22.99,
-                        image: '/assets/shop/prod1/1.jpg',
-                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-                    },
-                    {
-                        id: 5,
-                        name: 'Sed Eiusmod',
-                        price: 18.99,
-                        image: '/assets/shop/prod2/1.jpg',
-                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-                    },
-                    {
-                        id: 6,
-                        name: 'Tempor Incididunt',
-                        price: 29.99,
-                        image: '/assets/shop/prod3/1.jpg',
-                        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-                    }
-                ]);
+            if (error || !data || data.length === 0) {
+                console.log('Using placeholder products');
+                // Always use placeholder products if Firebase is empty or fails
+                setProducts(placeholderProducts);
             } else {
-                setProducts(data || []);
+                setProducts(data);
             }
             setLoading(false);
         };
@@ -83,7 +90,15 @@ function Shop({ addToCart }) {
 
     return (
         <div className="shop-page">
-            <Marquee />
+            <Marquee
+                text="barbershop / school / consultancy /"
+                speed={300}
+            />
+            <TopHeader
+                logoSrc="./assets/logos/barberboy_alpha.png"
+                logoAlt="wworkshop.studio Logo"
+            />
+            <Sidebar isOpen={true} onClose={() => { }} />
 
             <div className="container">
                 <div className="shop-header">

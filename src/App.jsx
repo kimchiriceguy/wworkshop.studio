@@ -1,10 +1,11 @@
+// src/App.jsx
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import { useState } from 'react';
-import { AuthProvider } from './contexts/AuthContext';
+import { useState, useEffect } from 'react';
 
 // Import components
 import Header from './components/Header/Header';
 import ShoppingCart from './components/ShoppingCart/ShoppingCart';
+// import SplashScreen from './components/SplashScreen/SplashScreen';
 
 // Import pages
 import Home from './pages/Home';
@@ -14,20 +15,30 @@ import About from './pages/About';
 import Cart from './pages/Cart';
 import ProductDetail from './pages/ProductDetail';
 import Booking from './pages/Booking';
-import Login from './pages/Login';
-import Admin from './pages/Admin';
 
 // Import component styles
 import './components/Header/Header.css';
 import './components/ShoppingCart/ShoppingCart.css';
+// import './components/SplashScreen/SplashScreen.css';
 
 // Import global styles
 import './index.css';
 
 function AppContent() {
   const location = useLocation();
+  const [showSplash, setShowSplash] = useState(true);
   const [cartOpen, setCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    if (location.pathname === '/' && showSplash) {
+      const timer = setTimeout(() => {
+        setShowSplash(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [location.pathname, showSplash]);
 
   const addToCart = (product, quantity = 1) => {
     setCartItems(prev => {
@@ -77,10 +88,12 @@ function AppContent() {
 
   return (
     <>
-      <Header
-        cartCount={cartCount}
-        onCartClick={toggleCart}
-      />
+      {/* Temporarily disabled SplashScreen - video file missing */}
+      {/* {location.pathname === '/' && showSplash && (
+        <SplashScreen onComplete={() => setShowSplash(false)} />
+      )} */}
+
+
 
       <main className="main-content">
         <Routes>
@@ -103,14 +116,6 @@ function AppContent() {
           <Route
             path="/about"
             element={<About />}
-          />
-          <Route
-            path="/login"
-            element={<Login />}
-          />
-          <Route
-            path="/admin"
-            element={<Admin />}
           />
           <Route
             path="/cart"
@@ -146,9 +151,7 @@ function AppContent() {
 function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
+      <AppContent />
     </BrowserRouter>
   );
 }

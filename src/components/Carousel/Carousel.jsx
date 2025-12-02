@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Carousel.css';
 
-const Carousel = ({ 
+const Carousel = ({
   slides = [],
   autoPlay = false,
   autoPlayInterval = 5000,
@@ -49,8 +49,8 @@ const Carousel = ({
       {/* Slides */}
       <div className="list">
         {slides.map((slide, index) => (
-          <div 
-            key={index} 
+          <div
+            key={index}
             className={`item ${index === currentIndex ? 'active' : ''}`}
           >
             <div className="content">
@@ -65,9 +65,9 @@ const Carousel = ({
         <div className="thumbnail" onClick={handleThumbnailClick}>
           <div className="item">
             <a href={slides[currentIndex].thumbnailLink || '#'}>
-              <img 
-                src={slides[currentIndex].thumbnail} 
-                alt={slides[currentIndex].thumbnailAlt || 'Thumbnail'} 
+              <img
+                src={slides[currentIndex].thumbnail}
+                alt={slides[currentIndex].thumbnailAlt || 'Thumbnail'}
               />
             </a>
           </div>

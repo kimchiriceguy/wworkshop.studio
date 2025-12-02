@@ -9,12 +9,16 @@ import Button from '../components/Button/Button';
 import FormInput from '../components/FormInput/FormInput';
 import Modal from '../components/Modal/Modal';
 import Marquee from '../components/Marquee/Marquee';
+import TopHeader from '../components/TopHeader/TopHeader';
+import Sidebar from '../components/Sidebar/Sidebar';
 import '../components/Calendar/Calendar.css';
 import '../components/Dropdown/Dropdown.css';
 import '../components/Button/Button.css';
 import '../components/FormInput/FormInput.css';
 import '../components/Modal/Modal.css';
 import '../components/Marquee/Marquee.css';
+import '../components/TopHeader/TopHeader.css';
+import '../components/Sidebar/Sidebar.css';
 import './Booking.css';
 
 function Booking() {
@@ -31,6 +35,7 @@ function Booking() {
     const [services, setServices] = useState([]);
     const [existingAppointments, setExistingAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showBarberModal, setShowBarberModal] = useState(false);
 
     const timeSlots = [
         '9:00 AM', '9:30 AM', '10:00 AM', '10:30 AM',
@@ -147,7 +152,15 @@ function Booking() {
 
     return (
         <div className="booking-page">
-            <Marquee />
+            <Marquee
+                text="barbershop / school / consultancy /"
+                speed={300}
+            />
+            <TopHeader
+                logoSrc="./assets/logos/barberboy_alpha.png"
+                logoAlt="wworkshop.studio Logo"
+            />
+            <Sidebar isOpen={true} onClose={() => { }} />
 
             <div className="container">
                 <h1 className="page-title">LOREM IPSUM</h1>

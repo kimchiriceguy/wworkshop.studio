@@ -6,10 +6,14 @@ import Button from '../components/Button/Button';
 import FormInput from '../components/FormInput/FormInput';
 import Modal from '../components/Modal/Modal';
 import Marquee from '../components/Marquee/Marquee';
+import TopHeader from '../components/TopHeader/TopHeader';
+import Sidebar from '../components/Sidebar/Sidebar';
 import '../components/Button/Button.css';
 import '../components/FormInput/FormInput.css';
 import '../components/Modal/Modal.css';
 import '../components/Marquee/Marquee.css';
+import '../components/TopHeader/TopHeader.css';
+import '../components/Sidebar/Sidebar.css';
 import './About.css';
 
 function About() {
@@ -27,7 +31,10 @@ function About() {
             setLoading(true);
             const { data, error } = await getBlog('main');
             if (error) {
-                console.error('Error fetching blog:', error);
+                // Only log non-blocked errors (ad blockers cause blocked errors)
+                if (!error.includes('ERR_BLOCKED_BY_CLIENT') && !error.includes('offline')) {
+                    console.error('Error fetching blog:', error);
+                }
                 // Default content on error
                 setBlogContent(`
                     <h2>Welcome to WWORKSHOP STUDIO</h2>
@@ -83,7 +90,15 @@ function About() {
 
     return (
         <div className="about-page">
-            <Marquee />
+            <Marquee
+                text="barbershop / school / consultancy /"
+                speed={300}
+            />
+            <TopHeader
+                logoSrc="./assets/logos/barberboy_alpha.png"
+                logoAlt="wworkshop.studio Logo"
+            />
+            <Sidebar isOpen={true} onClose={() => { }} />
 
             <div className="container">
                 <div className="about-header">

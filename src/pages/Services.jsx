@@ -4,10 +4,14 @@ import Carousel from '../components/Carousel/Carousel';
 import ServiceCard from '../components/ServiceCard/ServiceCard';
 import Button from '../components/Button/Button';
 import Marquee from '../components/Marquee/Marquee';
+import TopHeader from '../components/TopHeader/TopHeader';
+import Sidebar from '../components/Sidebar/Sidebar';
 import '../components/Carousel/Carousel.css';
 import '../components/ServiceCard/ServiceCard.css';
 import '../components/Button/Button.css';
 import '../components/Marquee/Marquee.css';
+import '../components/TopHeader/TopHeader.css';
+import '../components/Sidebar/Sidebar.css';
 import './Services.css';
 
 function Services() {
@@ -76,7 +80,16 @@ function Services() {
 
     return (
         <div className="services-page">
-            <Marquee />
+
+            <Marquee
+                text="barbershop / school / consultancy /"
+                speed={300}
+            />
+            <TopHeader
+                logoSrc="./assets/logos/barberboy_alpha.png"
+                logoAlt="wworkshop.studio Logo"
+            />
+            <Sidebar isOpen={true} onClose={() => { }} />
 
             <div className="container">
                 <div className="services-header">

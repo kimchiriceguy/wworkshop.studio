@@ -26,21 +26,28 @@
 
 .marquee-text {
   color: #8400ff;
-  font-size: 0.9rem;
-  letter-spacing: 2px;
+  font-size: 1rem;
+  letter-spacing: 5px;
   font-weight: 500;
   font-family: "Inconsolata", monospace;
-  padding: 0 3rem;
+  padding: 0 5rem;
   display: inline-block;
   white-space: nowrap;
+  cursor: crosshair;
+  transition: color 0.3s ease;
+}
+
+.marquee-text.clicked {
+  color: var(--clicked-color);
+  transition: color 0.3s ease;
 }
 
 @keyframes scroll {
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(-50%);
   }
 }
-
