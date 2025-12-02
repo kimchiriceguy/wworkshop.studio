@@ -66,3 +66,27 @@
 .home-carousel img.carousel-image {
     width: 300px !important;
 }
+
+.animatedguy {
+    animation: slideIn 1s ease-in-out;
+    animation-fill-mode: forwards;
+    opacity: 0;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.bookApp {
+    margin-top: 33rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+}

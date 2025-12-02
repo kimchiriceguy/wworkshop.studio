@@ -1,23 +1,26 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import Button from '../components/Button/Button';
 import FormInput from '../components/FormInput/FormInput';
-import Marquee from '../components/Marquee/Marquee';
+import Modal from '../components/Modal/Modal';
 import '../components/Button/Button.css';
 import '../components/FormInput/FormInput.css';
-import '../components/Marquee/Marquee.css';
+import '../components/Modal/Modal.css';
 import './Login.css';
 
-function Login() {
-    const navigate = useNavigate();
+function Login({ isOpen, onClose, mode = 'login' }) {
     const { login, signup } = useAuth();
-    const [isSignUp, setIsSignUp] = useState(false);
+    const [isSignUp, setIsSignUp] = useState(mode === 'signup');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [displayName, setDisplayName] = useState('');
+    const [phone, setPhone] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        setIsSignUp(mode === 'signup');
+    }, [mode]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -31,16 +34,14 @@ function Login() {
                     setLoading(false);
                     return;
                 }
-                const result = await signup(email, password, displayName);
+                const result = await signup(email, password, displayName, phone);
                 if (result.success) {
-                    // Force page reload to update auth state
-                    window.location.href = '/';
+                    onClose?.();
                 }
             } else {
                 const result = await login(email, password);
                 if (result.success) {
-                    // Force page reload to update auth state
-                    window.location.href = '/';
+                    onClose?.();
                 } else {
                     setError('Invalid email or password');
                 }
@@ -53,9 +54,12 @@ function Login() {
     };
 
     return (
-        <div className="login-page">
-            <Marquee />
-
+        <Modal
+            isOpen={isOpen}
+            onClose={onClose}
+            title={isSignUp ? 'Sign Up' : 'Login'}
+            size="medium"
+        >
             <div className="login-container">
                 <div className="login-card">
                     <img
@@ -87,6 +91,17 @@ function Login() {
                             onChange={(e) => setEmail(e.target.value)}
                             required
                         />
+
+                        {isSignUp && (
+                            <FormInput
+                                label="Phone Number"
+                                name="phone"
+                                type="tel"
+                                value={phone}
+                                onChange={(e) => setPhone(e.target.value)}
+                                required
+                            />
+                        )}
 
                         <FormInput
                             label="Password"
@@ -126,7 +141,7 @@ function Login() {
                     </div>
                 </div>
             </div>
-        </div>
+        </Modal>
     );
 }
 

@@ -35,7 +35,6 @@ function Home({ addToCart }) {
 
     return (
         <div className="home-page">
-            <Login />
             <SplashScreen
                 videoSrc="./assets/videos/splash_video.mp4"
                 onComplete={() => console.log('Splash screen complete')}
@@ -45,10 +44,7 @@ function Home({ addToCart }) {
             />
 
             {/* ok so these should be present in all pages */}
-            <Marquee
-                text="barbershop / school / consultancy /"
-                speed={300}
-            />
+            <Marquee text="products • classes • cuts • consultancy •" speed={250} />
             <TopHeader
                 logoSrc="./assets/logos/barberboy_alpha.png"
                 logoAlt="wworkshop.studio Logo"
@@ -58,7 +54,7 @@ function Home({ addToCart }) {
 
             <section className="home-hero-section">
                 <div className="hero-content">
-                    <h1>Welcome to wworkshop.studio</h1>
+                    <h1 className='animatedguy'>Welcome to wworkshop.studio</h1>
                     <p>An Independent, Barber Owned, Barber Operated Barbershop with no pretense</p>
                     <Button variant="primary" onClick={() => navigate('/services')}>
                         Book an Appointment &gt;

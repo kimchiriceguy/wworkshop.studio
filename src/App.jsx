@@ -1,6 +1,7 @@
 // src/App.jsx
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useAuth } from './contexts/AuthContext';
 
 // Import components
 import Header from './components/Header/Header';
@@ -15,6 +16,8 @@ import About from './pages/About';
 import Cart from './pages/Cart';
 import ProductDetail from './pages/ProductDetail';
 import Booking from './pages/Booking';
+import Admin from './pages/Admin';
+import Login from './pages/Login';
 
 // Import component styles
 import './components/Header/Header.css';
@@ -29,6 +32,10 @@ function AppContent() {
   const [showSplash, setShowSplash] = useState(true);
   const [cartOpen, setCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [loginMode, setLoginMode] = useState('login'); // 'login' or 'signup'
+  const [loginMenuOpen, setLoginMenuOpen] = useState(false);
+  const { user, isAdmin, logout } = useAuth();
 
   useEffect(() => {
     if (location.pathname === '/' && showSplash) {
@@ -86,6 +93,9 @@ function AppContent() {
 
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
+  const displayName =
+    user?.displayName || user?.name || user?.username || user?.email || 'User';
+
   return (
     <>
       {/* Temporarily disabled SplashScreen - video file missing */}
@@ -93,7 +103,122 @@ function AppContent() {
         <SplashScreen onComplete={() => setShowSplash(false)} />
       )} */}
 
-
+      {/* Login / user container in top-right, visible on all pages */}
+      <div className="login-status">
+        {user ? (
+          <>
+            <div className="login-status-text">
+              Welcome, <span className="login-status-name">{displayName}!</span>
+            </div>
+            {isAdmin && (
+              <div className="login-status-admin-link">
+                <Link to="/admin">Go to admin page</Link>
+              </div>
+            )}
+            <div className="login-status-actions">
+              <button
+                type="button"
+                className="login-status-button"
+                onClick={() => {
+                  setLoginMode('login');
+                  setLoginOpen(true);
+                  setLoginMenuOpen(false);
+                }}
+              >
+                Login
+              </button>
+              <button
+                type="button"
+                className="login-status-caret"
+                onClick={() => setLoginMenuOpen((open) => !open)}
+              >
+                ▾
+              </button>
+              {loginMenuOpen && (
+                <div className="login-status-dropdown">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setLoginMode('login');
+                      setLoginOpen(true);
+                      setLoginMenuOpen(false);
+                    }}
+                  >
+                    Sign in
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setLoginMode('signup');
+                      setLoginOpen(true);
+                      setLoginMenuOpen(false);
+                    }}
+                  >
+                    Log in
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      logout();
+                      setLoginMenuOpen(false);
+                    }}
+                  >
+                    Sign out
+                  </button>
+                </div>
+              )}
+            </div>
+          </>
+        ) : (
+          <div className="login-status-actions">
+            <button
+              type="button"
+              className="login-status-button"
+              onClick={() => {
+                setLoginMode('login');
+                setLoginOpen(true);
+                setLoginMenuOpen(false);
+              }}
+            >
+              Login
+            </button>
+            <button
+              type="button"
+              className="login-status-caret"
+              onClick={() => setLoginMenuOpen((open) => !open)}
+            >
+              ▾
+            </button>
+            {loginMenuOpen && (
+              <div className="login-status-dropdown">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLoginMode('login');
+                    setLoginOpen(true);
+                    setLoginMenuOpen(false);
+                  }}
+                >
+                  Sign in
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLoginMode('signup');
+                    setLoginOpen(true);
+                    setLoginMenuOpen(false);
+                  }}
+                >
+                  Log in
+                </button>
+                <button type="button" disabled>
+                  Sign out
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
 
       <main className="main-content">
         <Routes>
@@ -116,6 +241,10 @@ function AppContent() {
           <Route
             path="/about"
             element={<About />}
+          />
+          <Route
+            path="/admin"
+            element={<Admin />}
           />
           <Route
             path="/cart"
@@ -143,6 +272,12 @@ function AppContent() {
         updateQuantity={updateQuantity}
         removeFromCart={removeFromCart}
         total={cartTotal}
+      />
+
+      <Login
+        isOpen={loginOpen}
+        onClose={() => setLoginOpen(false)}
+        mode={loginMode}
       />
     </>
   );
